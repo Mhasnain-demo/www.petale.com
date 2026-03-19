@@ -1,0 +1,1649 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Pétale — Fresh Flower Boutique</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400;1,600&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<style>
+:root{
+  --rose:#C0152A;--rose-h:#8B0E1C;--blush:#F7C5CF;--petal:#FDE8ED;
+  --cream:#FFF9F5;--sage:#5C7A5A;--gold:#B8902A;--dark:#1A0508;
+  --mid:#6B3040;--bdr:rgba(192,21,42,.14);--sw:240px;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--dark);overflow-x:hidden}
+button,input,select{font-family:'DM Sans',sans-serif}
+/* ── ROUTING ── */
+.view{display:none}.view.on{display:block}
+.adv{display:none}.adv.on{display:flex}
+/* ── PROGRESS ── */
+#pgb{position:fixed;top:0;left:0;height:3px;background:linear-gradient(90deg,var(--rose),var(--blush));z-index:9999;width:0;pointer-events:none}
+/* ── TOAST ── */
+#tst{position:fixed;bottom:2rem;right:2rem;background:var(--dark);color:var(--cream);padding:.85rem 1.6rem;border-radius:50px;font-size:.83rem;font-weight:500;z-index:9000;opacity:0;transform:translateY(10px);transition:.3s;pointer-events:none;max-width:320px;box-shadow:0 8px 28px rgba(0,0,0,.25)}
+#tst.on{opacity:1;transform:translateY(0)}
+/* ── NAV ── */
+#nav{position:fixed;top:0;left:0;right:0;z-index:500;padding:1.1rem 5vw;display:flex;align-items:center;justify-content:space-between;transition:.4s}
+#nav.sc{background:rgba(255,249,245,.96);backdrop-filter:blur(16px);box-shadow:0 1px 0 var(--bdr);padding:.75rem 5vw}
+.nlogo{font-family:'Playfair Display',serif;font-size:1.75rem;font-weight:600;color:var(--rose);cursor:pointer}
+.nlogo em{font-style:italic;font-weight:400}
+.nlinks{display:flex;gap:2rem;list-style:none}
+.nlinks a{font-size:.8rem;font-weight:500;letter-spacing:.07em;text-transform:uppercase;color:var(--dark);cursor:pointer;transition:color .2s}
+.nlinks a:hover{color:var(--rose)}
+.nacts{display:flex;align-items:center;gap:.9rem}
+.nbtn{background:none;border:none;font-size:1.1rem;color:var(--dark);position:relative;padding:.3rem;cursor:pointer;transition:color .2s}
+.nbtn:hover{color:var(--rose)}
+.cbdg{position:absolute;top:-5px;right:-5px;background:var(--rose);color:#fff;width:17px;height:17px;border-radius:50%;font-size:.6rem;display:flex;align-items:center;justify-content:center;font-weight:700}
+.nsign{background:var(--rose);color:#fff;border:none;padding:.5rem 1.2rem;border-radius:50px;font-size:.78rem;font-weight:500;cursor:pointer;transition:.2s;white-space:nowrap}
+.nsign:hover{background:var(--rose-h);transform:translateY(-1px)}
+.hbg{display:none;flex-direction:column;gap:4px;background:none;border:none;cursor:pointer;padding:5px}
+.hbg span{display:block;width:22px;height:2px;background:var(--dark);border-radius:2px;transition:.3s}
+#mbnav{display:none;position:fixed;inset:0;z-index:490;background:rgba(255,249,245,.98);backdrop-filter:blur(16px);flex-direction:column;align-items:center;justify-content:center;gap:2rem}
+#mbnav.on{display:flex}
+#mbnav a{font-family:'Playfair Display',serif;font-size:2rem;font-style:italic;color:var(--dark);cursor:pointer;transition:color .2s}
+#mbnav a:hover{color:var(--rose)}
+.mbx{position:absolute;top:1.5rem;right:5vw;background:none;border:none;font-size:1.8rem;cursor:pointer;color:var(--rose)}
+/* ── HERO ── */
+.hero{min-height:100vh;display:grid;grid-template-columns:1fr 1fr;overflow:hidden;padding-top:72px}
+.hl{background:var(--petal);display:flex;flex-direction:column;justify-content:center;padding:4rem 4vw 4rem 7vw;position:relative;z-index:1}
+.hl::after{content:'';position:absolute;right:-42px;top:0;bottom:0;width:85px;background:var(--petal);clip-path:polygon(0 0,0 100%,100% 50%);z-index:2;pointer-events:none}
+.htag{display:inline-flex;align-items:center;gap:.5rem;background:rgba(192,21,42,.09);border:1px solid rgba(192,21,42,.2);color:var(--rose);font-size:.72rem;font-weight:500;letter-spacing:.1em;text-transform:uppercase;padding:.35rem 1rem;border-radius:50px;margin-bottom:1.8rem;animation:fup .8s ease both}
+.hero h1{font-family:'Playfair Display',serif;font-size:clamp(2.6rem,5vw,5rem);font-weight:400;line-height:1.05;margin-bottom:1.4rem;animation:fup .8s .1s ease both}
+.hero h1 em{font-style:italic;color:var(--rose)}
+.hsub{font-size:1rem;font-weight:300;line-height:1.85;color:var(--mid);max-width:420px;margin-bottom:2.5rem;animation:fup .8s .2s ease both}
+.hbtns{display:flex;gap:1rem;flex-wrap:wrap;animation:fup .8s .3s ease both}
+.htrust{display:flex;gap:1.5rem;margin-top:2.5rem;animation:fup .8s .45s ease both;flex-wrap:wrap}
+.hti{display:flex;align-items:center;gap:.4rem;font-size:.78rem;color:var(--mid)}
+.hr{position:relative;overflow:hidden;background:#e8d5d8;display:flex;align-items:center;justify-content:center}
+.hss{width:100%;height:100%;position:relative}
+.hsl{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:13rem;opacity:0;transition:opacity 1.2s}
+.hsl.on{opacity:1}
+.hsl:nth-child(1){background:linear-gradient(135deg,#f5d5dc,#e8b8c2)}
+.hsl:nth-child(2){background:linear-gradient(135deg,#d5e8d5,#b8c8b8)}
+.hsl:nth-child(3){background:linear-gradient(135deg,#f5e8d5,#e8d0b8)}
+.hdots{position:absolute;bottom:2rem;left:50%;transform:translateX(-50%);display:flex;gap:.5rem;z-index:3}
+.hd{width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,.5);border:none;padding:0;cursor:pointer;transition:.25s}
+.hd.on{background:#fff;transform:scale(1.3)}
+.hfc{position:absolute;background:rgba(255,255,255,.92);backdrop-filter:blur(8px);border-radius:14px;padding:.85rem 1.2rem;box-shadow:0 8px 28px rgba(0,0,0,.12);font-size:.78rem;font-weight:500;z-index:3;animation:hfl 5s ease-in-out infinite}
+.hfc em{color:var(--rose);font-style:normal}
+.hf1{top:2rem;right:2rem}.hf2{bottom:4rem;left:2rem;animation-delay:1.5s}
+/* ── MARQUEE ── */
+.mqstrip{background:var(--rose);padding:.65rem 0;overflow:hidden;white-space:nowrap}
+.mqin{display:inline-flex;animation:mq 22s linear infinite}
+.mqit{font-size:.7rem;font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.9);padding:0 2rem}
+.mqd{color:var(--blush)}
+/* ── SECTIONS ── */
+.sec{padding:6rem 5vw}
+.secbg{background:var(--petal)}
+.sh{margin-bottom:3rem}
+.sey{display:flex;align-items:center;gap:.6rem;margin-bottom:.8rem}
+.seyl{width:28px;height:1.5px;background:var(--rose)}
+.seyt{font-size:.7rem;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:var(--rose)}
+.st2{font-family:'Playfair Display',serif;font-size:clamp(1.8rem,3.5vw,3rem);font-weight:400;line-height:1.15}
+.st2 em{font-style:italic;color:var(--rose)}
+.ssub{font-size:.95rem;font-weight:300;color:var(--mid);line-height:1.85;max-width:500px;margin-top:.6rem}
+/* ── CATEGORIES ── */
+.catg{display:grid;grid-template-columns:repeat(auto-fit,minmax(148px,1fr));gap:1.2rem}
+.catc{background:#fff;border-radius:16px;padding:1.8rem 1.2rem;text-align:center;cursor:pointer;transition:.3s;border:1.5px solid transparent}
+.catc:hover,.catc.on{transform:translateY(-5px);box-shadow:0 14px 32px rgba(192,21,42,.1);border-color:var(--bdr)}
+.catc.on{background:var(--petal);border-color:var(--rose)}
+.catic{font-size:2.5rem;display:block;margin-bottom:.8rem}
+.catn{font-family:'Playfair Display',serif;font-size:.95rem}
+.catct{font-size:.72rem;color:var(--mid);margin-top:.2rem}
+/* ── FILTER ── */
+.fbar{display:flex;gap:.6rem;flex-wrap:wrap;margin-bottom:2.2rem;align-items:center}
+.fb{background:#fff;border:1.5px solid var(--bdr);color:var(--mid);padding:.48rem 1.15rem;border-radius:50px;font-size:.78rem;cursor:pointer;transition:.2s}
+.fb:hover,.fb.on{background:var(--rose);border-color:var(--rose);color:#fff}
+.sbox{margin-left:auto;display:flex;align-items:center;gap:.45rem;background:#fff;border:1.5px solid var(--bdr);border-radius:50px;padding:.45rem 1rem;transition:border-color .2s}
+.sbox:focus-within{border-color:var(--rose)}
+.sbox input{border:none;outline:none;font-size:.82rem;background:transparent;color:var(--dark);width:155px}
+/* ── PRODUCT GRID ── */
+.pgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(228px,1fr));gap:1.8rem}
+.pcard{background:#fff;border-radius:22px;overflow:hidden;transition:.35s;position:relative;border:1px solid transparent}
+.pcard:hover{transform:translateY(-8px);box-shadow:0 24px 60px rgba(192,21,42,.14);border-color:var(--bdr)}
+.pcard.oos{opacity:.72}
+/* per-card slideshow */
+.pimgw{position:relative;height:210px;overflow:hidden}
+.pss{width:100%;height:100%;position:relative}
+.psl{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:5rem;opacity:0;transition:opacity .55s}
+.psl.on{opacity:1}
+.pnav{position:absolute;top:50%;transform:translateY(-50%);background:rgba(255,255,255,.85);border:none;border-radius:50%;width:28px;height:28px;display:flex;align-items:center;justify-content:center;font-size:.8rem;z-index:4;opacity:0;transition:.2s;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.12)}
+.pcard:hover .pnav{opacity:1}
+.pnav.pv{left:7px}.pnav.nx{right:7px}
+.pdts{position:absolute;bottom:8px;left:50%;transform:translateX(-50%);display:flex;gap:4px;z-index:3}
+.pdt{width:5px;height:5px;border-radius:50%;background:rgba(255,255,255,.5);border:none;padding:0;cursor:pointer;transition:.2s}
+.pdt.on{background:#fff;transform:scale(1.25)}
+.pbdg{position:absolute;top:10px;left:10px;font-size:.62rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;padding:.28rem .78rem;border-radius:50px;z-index:2;pointer-events:none}
+.bp{background:var(--gold);color:#fff}
+.bn{background:var(--sage);color:#fff}
+.bs{background:var(--rose);color:#fff}
+.bo{background:#888;color:#fff}
+.pwl{position:absolute;top:10px;right:10px;background:rgba(255,255,255,.9);border:none;border-radius:50%;width:32px;height:32px;display:flex;align-items:center;justify-content:center;font-size:.85rem;z-index:3;cursor:pointer;transition:.25s;box-shadow:0 2px 8px rgba(0,0,0,.1)}
+.pwl:hover{transform:scale(1.15)}
+.pwl.on{background:var(--blush)}
+.pbdy{padding:1.2rem 1.4rem 1.5rem}
+.pct{font-size:.7rem;font-weight:500;color:var(--rose);letter-spacing:.07em;text-transform:uppercase;margin-bottom:.28rem}
+.pnm{font-family:'Playfair Display',serif;font-size:1.05rem;font-weight:400;margin-bottom:.28rem}
+.pds{font-size:.79rem;font-weight:300;color:var(--mid);line-height:1.6;margin-bottom:.95rem}
+.pft{display:flex;align-items:center;justify-content:space-between;gap:.5rem}
+.ppr{font-size:1.1rem;font-weight:600;display:flex;align-items:baseline;gap:.3rem}
+.pop{font-size:.78rem;color:#bbb;text-decoration:line-through;font-weight:300}
+.adb{background:var(--rose);color:#fff;border:none;width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.1rem;cursor:pointer;transition:.22s;flex-shrink:0}
+.adb:hover{background:var(--rose-h);transform:scale(1.1)}
+.adb:disabled{background:#ccc;cursor:not-allowed;transform:none}
+.ooslbl{font-size:.72rem;font-weight:500;color:#999}
+/* img bg gradients */
+.g1{background:linear-gradient(135deg,#fce4ec,#f8bbd9)}
+.g2{background:linear-gradient(135deg,#e8f5e9,#c8e6c9)}
+.g3{background:linear-gradient(135deg,#fff3e0,#ffe0b2)}
+.g4{background:linear-gradient(135deg,#f3e5f5,#e1bee7)}
+.g5{background:linear-gradient(135deg,#e3f2fd,#bbdefb)}
+.g6{background:linear-gradient(135deg,#fce8e8,#f5c2c2)}
+.g7{background:linear-gradient(135deg,#f0f4c3,#dce775)}
+.g8{background:linear-gradient(135deg,#e0f7fa,#b2ebf2)}
+.g9{background:linear-gradient(135deg,#fdf6e3,#f5e6c0)}
+.g10{background:linear-gradient(135deg,#fce4ec,#f48fb1)}
+/* ── WHY ── */
+.wgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:1.4rem}
+.wc{background:#fff;border-radius:16px;padding:2rem 1.6rem;border:1px solid var(--bdr);transition:.3s}
+.wc:hover{transform:translateY(-4px);box-shadow:0 14px 32px rgba(192,21,42,.08)}
+.wic{font-size:2rem;margin-bottom:1rem}
+.wtt{font-family:'Playfair Display',serif;font-size:1.05rem;margin-bottom:.45rem}
+.wtx{font-size:.84rem;font-weight:300;color:var(--mid);line-height:1.75}
+/* ── REVIEWS ── */
+.tgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(270px,1fr));gap:1.4rem}
+.tc{background:#fff;border-radius:16px;padding:2rem;border:1px solid var(--bdr);transition:.3s}
+.tc:hover{box-shadow:0 14px 32px rgba(192,21,42,.08);transform:translateY(-3px)}
+.tst{color:var(--rose);font-size:.85rem;margin-bottom:.8rem}
+.ttx{font-size:.88rem;font-weight:300;color:var(--mid);line-height:1.8;font-style:italic;margin-bottom:1.2rem}
+.tau{display:flex;align-items:center;gap:.7rem}
+.tav{width:38px;height:38px;border-radius:50%;background:var(--petal);display:flex;align-items:center;justify-content:center;font-size:1.1rem}
+.tnm{font-weight:500;font-size:.85rem}
+.tdt{font-size:.72rem;color:var(--mid)}
+/* ── NEWSLETTER ── */
+.nlsec{background:linear-gradient(135deg,var(--rose),var(--rose-h));padding:5rem 5vw;text-align:center;position:relative;overflow:hidden}
+.nlsec::before{content:'🌸🌺🌼🌻💐🌷🌹';position:absolute;top:-10px;font-size:6rem;opacity:.05;letter-spacing:2rem;white-space:nowrap;pointer-events:none}
+.nlt{font-family:'Playfair Display',serif;font-size:clamp(1.8rem,3vw,2.8rem);font-weight:400;color:#fff;margin-bottom:.8rem;position:relative}
+.nls{color:rgba(255,255,255,.75);font-size:.95rem;font-weight:300;line-height:1.7;margin-bottom:2rem;max-width:440px;margin-left:auto;margin-right:auto;position:relative}
+.nlf{display:flex;gap:.7rem;justify-content:center;flex-wrap:wrap;position:relative}
+.nlinp{padding:.82rem 1.5rem;border-radius:50px;border:none;font-size:.88rem;width:280px;max-width:100%;outline:none}
+.nlbtn{background:var(--dark);color:#fff;border:none;padding:.82rem 1.8rem;border-radius:50px;font-size:.85rem;font-weight:500;cursor:pointer;transition:.2s}
+.nlbtn:hover{background:#2d0a10;transform:translateY(-1px)}
+/* ── FOOTER ── */
+.siteft{background:var(--dark);color:rgba(255,249,245,.5);padding:4rem 5vw 2rem}
+.ftg{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:3rem;margin-bottom:3rem;padding-bottom:2.5rem;border-bottom:1px solid rgba(255,255,255,.07)}
+.flog{font-family:'Playfair Display',serif;font-size:1.5rem;color:var(--rose);display:block;cursor:pointer}
+.flog em{font-style:italic;font-weight:400}
+.fbp{font-size:.83rem;font-weight:300;line-height:1.8;max-width:240px;margin-top:.5rem}
+.fcol h5{font-size:.7rem;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,249,245,.8);margin-bottom:1.2rem}
+.fcol ul{list-style:none;display:flex;flex-direction:column;gap:.6rem}
+.fcol ul li{font-size:.83rem;font-weight:300;color:rgba(255,249,245,.45);cursor:pointer;transition:color .2s}
+.fcol ul li:hover{color:var(--blush)}
+.ftb{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:.8rem;font-size:.75rem}
+.fsc{display:flex;gap:.6rem}
+.fsb{width:32px;height:32px;border-radius:8px;background:rgba(255,255,255,.07);display:flex;align-items:center;justify-content:center;color:rgba(255,249,245,.4);font-size:.78rem;cursor:pointer;transition:.2s}
+.fsb:hover{background:var(--rose);color:#fff}
+/* ── CART DRAWER ── */
+.cov{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:600;opacity:0;pointer-events:none;transition:opacity .3s}
+.cov.on{opacity:1;pointer-events:all}
+.cdraw{position:fixed;top:0;right:0;bottom:0;width:390px;max-width:95vw;background:var(--cream);z-index:601;transform:translateX(100%);transition:transform .35s cubic-bezier(.4,0,.2,1);display:flex;flex-direction:column;box-shadow:-10px 0 40px rgba(0,0,0,.15)}
+.cdraw.on{transform:translateX(0)}
+.cdh{padding:1.5rem;border-bottom:1px solid var(--bdr);display:flex;align-items:center;justify-content:space-between}
+.cdh h3{font-family:'Playfair Display',serif;font-size:1.3rem;font-weight:400}
+.cdcl{background:none;border:none;font-size:1.4rem;color:var(--mid);cursor:pointer}
+.cdbody{flex:1;overflow-y:auto;padding:1.2rem}
+.cdit{display:flex;gap:1rem;padding:.9rem 0;border-bottom:1px solid var(--bdr)}
+.cdiimg{width:60px;height:60px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:2rem;flex-shrink:0;background:var(--petal)}
+.cdinf{flex:1;min-width:0}
+.cdinm{font-size:.87rem;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cdip{font-size:.82rem;color:var(--rose);margin-top:.18rem}
+.cdiq{display:flex;align-items:center;gap:.5rem;margin-top:.4rem}
+.qb{background:var(--petal);border:none;width:24px;height:24px;border-radius:50%;font-size:.85rem;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:.2s}
+.qb:hover{background:var(--rose);color:#fff}
+.qn{font-size:.82rem;font-weight:500;min-width:16px;text-align:center}
+.cdidl{margin-left:auto;background:none;border:none;color:#ccc;font-size:.85rem;cursor:pointer;transition:color .2s}
+.cdidl:hover{color:var(--rose)}
+.cdmt{text-align:center;padding:3rem 1rem;color:var(--mid)}
+.cdmt div{font-size:3rem;margin-bottom:.8rem}
+.cdft{padding:1.2rem 1.5rem;border-top:1px solid var(--bdr)}
+.cdtr{display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem}
+.cdta{font-family:'Playfair Display',serif;font-size:1.4rem;font-weight:600}
+.cdcob{width:100%;background:var(--rose);color:#fff;border:none;padding:.95rem;border-radius:50px;font-size:.88rem;font-weight:500;cursor:pointer;transition:.2s}
+.cdcob:hover{background:var(--rose-h)}
+/* ── CHECKOUT MODAL ── */
+.mbg{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:700;opacity:0;pointer-events:none;transition:opacity .3s;display:flex;align-items:center;justify-content:center;padding:1rem}
+.mbg.on{opacity:1;pointer-events:all}
+.mbox{background:var(--cream);border-radius:28px;padding:2.5rem;max-width:500px;width:100%;max-height:90vh;overflow-y:auto;transform:translateY(18px);transition:transform .3s;position:relative;box-shadow:0 24px 60px rgba(0,0,0,.2)}
+.mbg.on .mbox{transform:translateY(0)}
+.mxb{position:absolute;top:1.2rem;right:1.3rem;background:none;border:none;font-size:1.2rem;cursor:pointer;color:var(--mid)}
+.mtit{font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:400;margin-bottom:.25rem}
+.msub{font-size:.83rem;color:var(--mid);margin-bottom:1.8rem;font-weight:300}
+.fg2{display:grid;grid-template-columns:1fr 1fr;gap:.9rem}
+.fg{margin-bottom:1rem}
+.fg label{display:block;font-size:.72rem;font-weight:500;letter-spacing:.07em;text-transform:uppercase;color:var(--mid);margin-bottom:.35rem}
+.fg input,.fg select{width:100%;padding:.78rem 1rem;border:1.5px solid var(--bdr);border-radius:10px;font-size:.88rem;background:#fff;color:var(--dark);outline:none;transition:border-color .2s}
+.fg input:focus,.fg select:focus{border-color:var(--rose)}
+.msbt{width:100%;margin-top:1.1rem;background:var(--rose);color:#fff;border:none;padding:.95rem;border-radius:50px;font-size:.9rem;font-weight:500;cursor:pointer;transition:.2s}
+.msbt:hover{background:var(--rose-h);transform:translateY(-1px)}
+/* ── AUTH ── */
+.authpg{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:2rem;position:relative;overflow:hidden;background:var(--cream)}
+.authbg{position:fixed;inset:0;pointer-events:none;z-index:0}
+.abp{position:absolute;opacity:.07;animation:drift linear infinite}
+@keyframes drift{0%{transform:translateY(110vh) rotate(0)}100%{transform:translateY(-10vh) rotate(360deg)}}
+.authp{position:relative;z-index:1;width:100%;background:#fff;border-radius:28px;padding:2.8rem 2.5rem;box-shadow:0 24px 60px rgba(192,21,42,.12);border:1px solid var(--bdr);animation:popin .6s cubic-bezier(.4,0,.2,1) both}
+.authp.sm{max-width:440px}.authp.lg{max-width:520px}
+.alw{text-align:center;margin-bottom:1.8rem}
+.aln{font-family:'Playfair Display',serif;font-size:2rem;font-weight:600;color:var(--rose);cursor:pointer}
+.aln em{font-style:italic;font-weight:400}
+.als{font-size:.78rem;color:var(--mid);margin-top:.25rem}
+.ati2{font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:400;margin-bottom:.22rem}
+.asub{font-size:.83rem;color:var(--mid);font-weight:300;margin-bottom:1.8rem}
+.afg{margin-bottom:1.1rem}
+.afg label{display:block;font-size:.72rem;font-weight:500;letter-spacing:.07em;text-transform:uppercase;color:var(--mid);margin-bottom:.38rem}
+.afg input,.afg select{width:100%;padding:.78rem 1.1rem;border:1.5px solid var(--bdr);border-radius:12px;font-size:.88rem;background:var(--cream);color:var(--dark);outline:none;transition:.2s}
+.afg input:focus,.afg select:focus{border-color:var(--rose);box-shadow:0 0 0 3px rgba(192,21,42,.08)}
+.afg2{display:grid;grid-template-columns:1fr 1fr;gap:.9rem}
+.arow{display:flex;justify-content:space-between;align-items:center;margin-bottom:1.4rem;flex-wrap:wrap;gap:.5rem}
+.rem{display:flex;align-items:center;gap:.4rem;font-size:.8rem;color:var(--mid);cursor:pointer}
+.rem input{accent-color:var(--rose)}
+.forg{font-size:.8rem;color:var(--rose);font-weight:500;cursor:pointer}
+.abtn2{width:100%;background:var(--rose);color:#fff;border:none;padding:.95rem;border-radius:50px;font-size:.9rem;font-weight:500;cursor:pointer;transition:.22s;margin-bottom:1.2rem}
+.abtn2:hover{background:var(--rose-h);transform:translateY(-1px);box-shadow:0 8px 24px rgba(192,21,42,.3)}
+.adiv{display:flex;align-items:center;gap:.8rem;margin-bottom:1.2rem}
+.adiv::before,.adiv::after{content:'';flex:1;height:1px;background:var(--bdr)}
+.adiv span{font-size:.75rem;color:var(--mid)}
+.soclg{display:grid;grid-template-columns:1fr 1fr;gap:.8rem;margin-bottom:1.4rem}
+.socb{background:var(--petal);border:1.5px solid var(--bdr);border-radius:12px;padding:.7rem;font-size:.82rem;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:.4rem;transition:.2s;color:var(--dark)}
+.socb:hover{border-color:var(--rose)}
+.asw{text-align:center;font-size:.83rem;color:var(--mid)}
+.asw a{color:var(--rose);font-weight:500;cursor:pointer}
+.asw a:hover{text-decoration:underline}
+.adml{text-align:center;margin-top:.9rem}
+.adml a{font-size:.78rem;color:var(--mid);cursor:pointer;transition:color .2s}
+.adml a:hover{color:var(--rose)}
+.emsg{background:rgba(192,21,42,.08);border:1px solid rgba(192,21,42,.2);color:var(--rose);border-radius:10px;padding:.7rem 1rem;font-size:.82rem;margin-bottom:1rem;display:none}
+.smsg{background:rgba(92,122,90,.1);border:1px solid rgba(92,122,90,.2);color:#2d6030;border-radius:10px;padding:.7rem 1rem;font-size:.82rem;margin-bottom:1rem;display:none}
+.perks{display:flex;gap:1.2rem;background:var(--petal);border-radius:12px;padding:.9rem 1.2rem;margin-bottom:1.5rem;flex-wrap:wrap}
+.perk{display:flex;align-items:center;gap:.35rem;font-size:.77rem;color:var(--mid)}
+.sbar{height:4px;border-radius:2px;background:var(--bdr);overflow:hidden;margin-top:.4rem}
+.sfill{height:100%;border-radius:2px;transition:.3s;width:0}
+.slbl{font-size:.7rem;color:var(--mid);margin-top:.22rem}
+.trow{display:flex;align-items:flex-start;gap:.5rem;font-size:.8rem;color:var(--mid);margin:.7rem 0 1.2rem}
+.trow input{accent-color:var(--rose);margin-top:2px;flex-shrink:0}
+.trow a{color:var(--rose);font-weight:500}
+/* ── ADMIN ── */
+.adv{min-height:100vh;width:100%}
+.asbov{display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:99}
+.asbov.on{display:block}
+.asb{width:var(--sw);background:#fff;border-right:1px solid var(--bdr);display:flex;flex-direction:column;position:fixed;top:0;left:0;bottom:0;z-index:100;transition:transform .3s}
+.asblo{padding:1.5rem 1.5rem 1rem;border-bottom:1px solid var(--bdr)}
+.asblo .logo{font-family:'Playfair Display',serif;font-size:1.4rem;color:var(--rose);font-weight:600;cursor:pointer}
+.asblo .logo em{font-style:italic;font-weight:400}
+.asblo .albl{font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;color:var(--mid);font-weight:400;display:block;margin-top:.2rem;opacity:.6}
+.asbnav{flex:1;padding:1rem 0;overflow-y:auto}
+.asnl{font-size:.6rem;letter-spacing:.13em;text-transform:uppercase;color:rgba(107,48,64,.4);padding:.7rem 1.5rem .3rem;font-weight:500}
+.asit{display:flex;align-items:center;gap:.8rem;padding:.65rem 1.5rem;font-size:.85rem;color:var(--mid);cursor:pointer;transition:.2s;border-left:3px solid transparent;user-select:none}
+.asit:hover{background:var(--petal);color:var(--rose)}
+.asit.on{background:var(--petal);color:var(--rose);border-left-color:var(--rose);font-weight:500}
+.asit .si{font-size:1rem;width:20px;text-align:center;flex-shrink:0}
+.asibdg{margin-left:auto;background:var(--rose);color:#fff;border-radius:50px;font-size:.6rem;padding:.15rem .5rem;font-weight:700}
+.asbft{padding:1rem 1.5rem;border-top:1px solid var(--bdr)}
+.asbfu{display:flex;align-items:center;gap:.7rem}
+.asuav{width:34px;height:34px;border-radius:50%;background:var(--petal);display:flex;align-items:center;justify-content:center;font-size:.95rem;flex-shrink:0}
+.asun{font-size:.83rem;font-weight:500}
+.asur{font-size:.7rem;color:var(--mid)}
+.aslo{margin-left:auto;background:none;border:none;font-size:.78rem;color:var(--mid);cursor:pointer;transition:color .2s}
+.aslo:hover{color:var(--rose)}
+.amain{margin-left:var(--sw);flex:1;display:flex;flex-direction:column;min-height:100vh}
+.atb{background:#fff;border-bottom:1px solid var(--bdr);padding:.9rem 2rem;display:flex;align-items:center;justify-content:space-between;gap:1rem;position:sticky;top:0;z-index:50}
+.atpt{font-family:'Playfair Display',serif;font-size:1.2rem;font-weight:400}
+.atbr{display:flex;align-items:center;gap:.9rem}
+.ats2{display:flex;align-items:center;gap:.4rem;background:var(--cream);border:1.5px solid var(--bdr);border-radius:50px;padding:.4rem .9rem;transition:.2s}
+.ats2:focus-within{border-color:var(--rose)}
+.ats2 input{border:none;outline:none;font-size:.82rem;background:transparent;width:165px}
+.atn{background:var(--petal);border:none;padding:.42rem .85rem;border-radius:50px;font-size:.78rem;color:var(--rose);cursor:pointer}
+.atv{background:var(--rose);color:#fff;border:none;padding:.42rem 1rem;border-radius:50px;font-size:.77rem;cursor:pointer;transition:.2s}
+.atv:hover{background:var(--rose-h)}
+.amobb{display:none;background:none;border:none;font-size:1.3rem;color:var(--dark);cursor:pointer}
+.acon{padding:1.8rem 2rem;flex:1}
+.apg{display:none}.apg.on{display:block}
+/* stat cards */
+.srow{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:1.2rem;margin-bottom:1.8rem}
+.sc{background:#fff;border-radius:16px;padding:1.4rem;border:1px solid var(--bdr);transition:.25s}
+.sc:hover{transform:translateY(-3px);box-shadow:0 8px 28px rgba(192,21,42,.07)}
+.sct{display:flex;justify-content:space-between;align-items:flex-start}
+.scic{font-size:1.5rem;background:var(--petal);border-radius:10px;padding:.4rem .5rem;line-height:1}
+.scn{font-family:'Playfair Display',serif;font-size:2.1rem;font-weight:600;margin-top:.6rem}
+.scl{font-size:.77rem;color:var(--mid);font-weight:300;margin-top:.18rem}
+.scch{font-size:.72rem;margin-top:.45rem;font-weight:500}
+.scup{color:var(--sage)}.scdn{color:var(--rose)}
+/* tables */
+.tcard{background:#fff;border-radius:16px;border:1px solid var(--bdr);overflow:hidden;margin-bottom:1.8rem}
+.thead2{padding:1.1rem 1.4rem;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--bdr);flex-wrap:wrap;gap:.7rem}
+.thtit{font-family:'Playfair Display',serif;font-size:1.05rem;font-weight:400}
+.tfilts{display:flex;gap:.45rem;flex-wrap:wrap}
+.tff{background:var(--cream);border:1.5px solid var(--bdr);color:var(--mid);padding:.32rem .85rem;border-radius:50px;font-size:.72rem;cursor:pointer;transition:.2s}
+.tff:hover,.tff.on{background:var(--rose);border-color:var(--rose);color:#fff}
+.twrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse;min-width:760px}
+thead tr{background:var(--petal)}
+th{padding:.75rem 1.1rem;text-align:left;font-size:.68rem;font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:var(--mid);white-space:nowrap}
+td{padding:.82rem 1.1rem;font-size:.82rem;border-bottom:1px solid rgba(192,21,42,.05);vertical-align:middle}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:rgba(253,232,237,.25)}
+.oid{font-weight:600;color:var(--rose);font-size:.79rem}
+.sbdg{display:inline-flex;align-items:center;gap:.3rem;padding:.28rem .78rem;border-radius:50px;font-size:.71rem;font-weight:500;white-space:nowrap}
+.sp{background:rgba(184,144,42,.12);color:#7a5008}
+.sd{background:rgba(92,122,90,.12);color:#2d5a22}
+.sca{background:rgba(192,21,42,.1);color:var(--rose)}
+.spr{background:rgba(60,110,200,.1);color:#2040a0}
+.actr{display:flex;gap:.38rem;flex-wrap:wrap}
+.ab{background:none;border:1px solid var(--bdr);border-radius:8px;padding:.27rem .65rem;font-size:.7rem;color:var(--mid);white-space:nowrap;cursor:pointer;transition:.2s}
+.ab:hover{border-color:var(--rose);color:var(--rose)}
+.ab.g{background:var(--sage);border-color:var(--sage);color:#fff}.ab.g:hover{background:#3d6830}
+.ab.r{background:rgba(192,21,42,.08);border-color:rgba(192,21,42,.2);color:var(--rose)}.ab.r:hover{background:var(--rose);color:#fff}
+.pthu{width:38px;height:38px;border-radius:10px;background:var(--petal);display:flex;align-items:center;justify-content:center;font-size:1.3rem;flex-shrink:0}
+.spill{display:inline-flex;padding:.26rem .68rem;border-radius:50px;font-size:.7rem;font-weight:500}
+.sin{background:rgba(92,122,90,.12);color:#2d5a22}
+.sout{background:rgba(192,21,42,.1);color:var(--rose)}
+/* charts */
+.crow{display:grid;grid-template-columns:2fr 1fr;gap:1.2rem;margin-bottom:1.8rem}
+.cbox{background:#fff;border-radius:16px;border:1px solid var(--bdr);padding:1.4rem}
+.ctit{font-family:'Playfair Display',serif;font-size:1rem;font-weight:400;margin-bottom:1.1rem}
+.bchart{display:flex;align-items:flex-end;gap:.45rem;height:110px}
+.bgp{display:flex;flex-direction:column;align-items:center;gap:.28rem;flex:1}
+.bar{background:linear-gradient(to top,var(--rose),var(--blush));border-radius:4px 4px 0 0;width:100%;min-height:3px;cursor:default}
+.bar:hover{background:linear-gradient(to top,var(--rose-h),var(--rose))}
+.blbl{font-size:.63rem;color:var(--mid)}
+.dlist{display:flex;flex-direction:column;gap:.7rem;margin-top:.4rem}
+.di{display:flex;align-items:center;gap:.6rem}
+.ddot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
+.dlbl{font-size:.8rem;color:var(--mid);flex:1}
+.dval{font-size:.8rem;font-weight:500}
+/* pagination */
+.pag{display:flex;align-items:center;justify-content:space-between;padding:.9rem 1.4rem;border-top:1px solid var(--bdr);flex-wrap:wrap;gap:.5rem}
+.pagi{font-size:.77rem;color:var(--mid)}
+.pagbs{display:flex;gap:.35rem}
+.pb{background:var(--cream);border:1.5px solid var(--bdr);border-radius:8px;width:30px;height:30px;display:flex;align-items:center;justify-content:center;font-size:.78rem;cursor:pointer;transition:.2s}
+.pb:hover,.pb.on{background:var(--rose);border-color:var(--rose);color:#fff}
+/* admin modal */
+.amod{position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:200;opacity:0;pointer-events:none;transition:opacity .3s;display:flex;align-items:center;justify-content:center;padding:1rem}
+.amod.on{opacity:1;pointer-events:all}
+.ambox{background:#fff;border-radius:22px;padding:2rem;max-width:460px;width:100%;max-height:90vh;overflow-y:auto;transform:translateY(14px);transition:transform .3s;position:relative;box-shadow:0 24px 60px rgba(0,0,0,.2)}
+.amod.on .ambox{transform:translateY(0)}
+.amx{position:absolute;top:1rem;right:1rem;background:none;border:none;font-size:1.2rem;cursor:pointer;color:var(--mid)}
+.amtit{font-family:'Playfair Display',serif;font-size:1.3rem;font-weight:400;margin-bottom:.25rem}
+.amsub{font-size:.8rem;color:var(--mid);margin-bottom:1.4rem}
+.amfg{margin-bottom:.9rem}
+.amfg label{display:block;font-size:.7rem;font-weight:500;letter-spacing:.06em;text-transform:uppercase;color:var(--mid);margin-bottom:.33rem}
+.amfg input,.amfg select{width:100%;padding:.68rem 1rem;border:1.5px solid var(--bdr);border-radius:10px;font-size:.85rem;background:var(--cream);outline:none;transition:.2s}
+.amfg input:focus,.amfg select:focus{border-color:var(--rose)}
+.amff{display:flex;gap:.7rem;margin-top:1.1rem}
+.amsv{background:var(--rose);color:#fff;border:none;padding:.78rem 1.8rem;border-radius:50px;font-size:.85rem;font-weight:500;cursor:pointer;transition:.2s;flex:1}
+.amsv:hover{background:var(--rose-h)}
+.amcn{background:var(--cream);color:var(--mid);border:1.5px solid var(--bdr);padding:.78rem 1.4rem;border-radius:50px;font-size:.85rem;cursor:pointer;transition:.2s}
+.amcn:hover{border-color:var(--rose);color:var(--rose)}
+/* admin toast */
+#atst{position:fixed;bottom:1.5rem;right:1.5rem;background:var(--dark);color:var(--cream);padding:.82rem 1.4rem;border-radius:12px;font-size:.82rem;z-index:300;opacity:0;transform:translateY(8px);transition:.3s;pointer-events:none;max-width:300px;box-shadow:0 8px 28px rgba(0,0,0,.25)}
+#atst.on{opacity:1;transform:translateY(0)}
+/* ── REVEAL ── */
+.rev{opacity:0;transform:translateY(24px);transition:opacity .75s,transform .75s}
+.rev.vis{opacity:1;transform:translateY(0)}
+/* ── KEYFRAMES ── */
+@keyframes fup{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:translateY(0)}}
+@keyframes hfl{0%,100%{transform:translateY(0)}50%{transform:translateY(-12px)}}
+@keyframes mq{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+@keyframes popin{from{opacity:0;transform:scale(.95) translateY(20px)}to{opacity:1;transform:scale(1) translateY(0)}}
+/* ── RESPONSIVE ── */
+@media(max-width:1024px){.ftg{grid-template-columns:1fr 1fr;gap:2rem}.crow{grid-template-columns:1fr}.amain{margin-left:0}.asb{transform:translateX(-100%)}.asb.mo{transform:translateX(0)}.amobb{display:block}}
+@media(max-width:900px){.hero{grid-template-columns:1fr}.hr{height:340px}.hl::after{display:none}.hfc{display:none}}
+@media(max-width:640px){.nlinks,.nsign{display:none}.hbg{display:flex}.sec{padding:4.5rem 4vw}.sbox{display:none}.ftg{grid-template-columns:1fr}.afg2{grid-template-columns:1fr}.fg2{grid-template-columns:1fr}.perks{flex-direction:column;gap:.5rem}.srow{grid-template-columns:1fr 1fr}.acon{padding:1.2rem}}
+@media(max-width:420px){.srow{grid-template-columns:1fr}}
+
+/* ═══════════════════ IMAGE CAROUSELS ═══════════════════ */
+.carousel-section{padding:4rem 0;overflow:hidden;position:relative}
+.carousel-section+.carousel-section{padding-top:0}
+.car-label{text-align:center;margin-bottom:1.8rem;padding:0 5vw}
+.car-label .sey{justify-content:center}
+.car-label .st2{text-align:center}
+.car-track-wrap{position:relative;overflow:hidden}
+.car-track{display:flex;gap:1.4rem;animation:carScroll 30s linear infinite;width:max-content;padding:0 1rem}
+.car-track:hover{animation-play-state:paused}
+.car-track.rev2{animation-direction:reverse;animation-duration:28s}
+.car-track.rev3{animation-duration:32s}
+.car-item{flex-shrink:0;width:260px;height:200px;border-radius:20px;overflow:hidden;position:relative;cursor:pointer;box-shadow:0 8px 28px rgba(192,21,42,.1);transition:transform .3s,box-shadow .3s}
+.car-item:hover{transform:translateY(-6px) scale(1.02);box-shadow:0 20px 48px rgba(192,21,42,.18)}
+.car-item-inner{width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:6rem;position:relative}
+.car-item-inner::after{content:'';position:absolute;inset:0;background:linear-gradient(to top,rgba(26,5,8,.45) 0%,transparent 55%);pointer-events:none}
+.car-label-tag{position:absolute;bottom:.7rem;left:.9rem;color:#fff;font-size:.78rem;font-weight:500;z-index:2;font-family:'Playfair Display',serif;font-style:italic;text-shadow:0 1px 4px rgba(0,0,0,.4)}
+.car-price-tag{position:absolute;top:.7rem;right:.7rem;background:rgba(255,255,255,.92);color:var(--rose);font-size:.72rem;font-weight:600;padding:.25rem .65rem;border-radius:50px;z-index:2}
+.car-badge-tag{position:absolute;top:.7rem;left:.7rem;font-size:.62rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;padding:.25rem .65rem;border-radius:50px;z-index:2}
+/* fade edges */
+.car-track-wrap::before,.car-track-wrap::after{content:'';position:absolute;top:0;bottom:0;width:80px;z-index:3;pointer-events:none}
+.car-track-wrap::before{left:0;background:linear-gradient(to right,var(--cream),transparent)}
+.car-track-wrap::after{right:0;background:linear-gradient(to left,var(--cream),transparent)}
+.car1-bg{background:var(--cream)}
+.car2-bg{background:var(--petal)}
+.car3-bg{background:#fff}
+@keyframes carScroll{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+
+/* ═══════════════════ ENHANCED ADMIN ═══════════════════ */
+/* Analytics cards */
+.ana-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1.2rem;margin-bottom:1.8rem}
+.ana-card{background:#fff;border-radius:16px;padding:1.4rem;border:1px solid var(--bdr);position:relative;overflow:hidden;transition:.25s}
+.ana-card:hover{transform:translateY(-3px);box-shadow:0 8px 28px rgba(192,21,42,.07)}
+.ana-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;border-radius:3px 3px 0 0}
+.ana-c1::before{background:linear-gradient(90deg,var(--rose),var(--blush))}
+.ana-c2::before{background:linear-gradient(90deg,var(--gold),#e8c96e)}
+.ana-c3::before{background:linear-gradient(90deg,var(--sage),#8ab088)}
+.ana-c4::before{background:linear-gradient(90deg,#5b8dd9,#8bb4f0)}
+.ana-c5::before{background:linear-gradient(90deg,#c06090,#e090b0)}
+.ana-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:.6rem}
+.ana-ico{font-size:1.5rem;background:var(--petal);border-radius:10px;padding:.4rem .5rem;line-height:1}
+.ana-num{font-family:'Playfair Display',serif;font-size:2rem;font-weight:600;color:var(--dark)}
+.ana-lbl{font-size:.77rem;color:var(--mid);font-weight:300;margin-bottom:.4rem}
+.ana-trend{font-size:.72rem;font-weight:500}.ana-up{color:var(--sage)}.ana-dn{color:var(--rose)}
+/* mini bar chart */
+.mini-bars{display:flex;align-items:flex-end;gap:3px;height:40px;margin-top:.6rem}
+.mb{background:linear-gradient(to top,var(--rose),var(--blush));border-radius:2px 2px 0 0;flex:1;min-height:3px;transition:height .8s ease;cursor:default}
+.mb:hover{background:linear-gradient(to top,var(--rose-h),var(--rose))}
+/* top products */
+.top-prods{display:grid;grid-template-columns:1fr 1fr;gap:1.2rem;margin-bottom:1.8rem}
+.tp-card{background:#fff;border-radius:16px;border:1px solid var(--bdr);overflow:hidden}
+.tp-head{padding:1rem 1.4rem;border-bottom:1px solid var(--bdr);font-family:'Playfair Display',serif;font-size:1rem;font-weight:400}
+.tp-list{padding:.6rem 0}
+.tp-item{display:flex;align-items:center;gap:.8rem;padding:.55rem 1.2rem;transition:background .2s;cursor:default}
+.tp-item:hover{background:rgba(253,232,237,.25)}
+.tp-rank{font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:600;color:var(--rose);width:24px;text-align:center;flex-shrink:0}
+.tp-ico{font-size:1.5rem;flex-shrink:0}
+.tp-nm{font-size:.83rem;font-weight:500;flex:1}
+.tp-val{font-size:.82rem;font-weight:600;color:var(--dark)}
+.tp-bar-wrap{width:60px;height:5px;background:var(--petal);border-radius:3px;overflow:hidden}
+.tp-bar{height:100%;background:linear-gradient(90deg,var(--rose),var(--blush));border-radius:3px}
+/* activity feed */
+.act-feed{background:#fff;border-radius:16px;border:1px solid var(--bdr);overflow:hidden;margin-bottom:1.8rem}
+.af-head{padding:1rem 1.4rem;border-bottom:1px solid var(--bdr);font-family:'Playfair Display',serif;font-size:1rem;font-weight:400}
+.af-list{padding:.4rem 0;max-height:280px;overflow-y:auto}
+.af-item{display:flex;align-items:flex-start;gap:.9rem;padding:.65rem 1.4rem;border-bottom:1px solid rgba(192,21,42,.04);transition:background .2s}
+.af-item:last-child{border-bottom:none}
+.af-item:hover{background:rgba(253,232,237,.25)}
+.af-ico{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.9rem;flex-shrink:0;margin-top:.1rem}
+.af-ico.ord{background:rgba(184,144,42,.12)}
+.af-ico.usr{background:rgba(92,122,90,.12)}
+.af-ico.stk{background:rgba(192,21,42,.1)}
+.af-txt{flex:1;min-width:0}
+.af-main{font-size:.82rem;font-weight:500;color:var(--dark)}
+.af-sub{font-size:.73rem;color:var(--mid);margin-top:.12rem}
+.af-time{font-size:.7rem;color:var(--mid);flex-shrink:0;margin-top:.1rem}
+/* coupons page */
+.cpn-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1.2rem;margin-bottom:2rem}
+.cpn-card{background:#fff;border-radius:16px;border:1px solid var(--bdr);overflow:hidden;transition:.25s;position:relative}
+.cpn-card:hover{transform:translateY(-3px);box-shadow:0 10px 28px rgba(192,21,42,.1)}
+.cpn-stripe{height:4px;background:linear-gradient(90deg,var(--rose),var(--blush))}
+.cpn-body{padding:1.4rem}
+.cpn-code{font-family:'Playfair Display',serif;font-size:1.6rem;font-weight:700;color:var(--rose);letter-spacing:.06em;margin-bottom:.3rem}
+.cpn-disc{font-size:.82rem;color:var(--mid);font-weight:300;margin-bottom:.8rem}
+.cpn-meta{display:flex;gap:.6rem;flex-wrap:wrap;margin-bottom:.9rem}
+.cpn-tag{background:var(--petal);color:var(--rose);font-size:.68rem;font-weight:500;padding:.25rem .65rem;border-radius:50px}
+.cpn-foot{display:flex;align-items:center;justify-content:space-between;padding:.8rem 1.4rem;border-top:1px solid var(--bdr);background:rgba(253,232,237,.2)}
+.cpn-uses{font-size:.75rem;color:var(--mid)}
+.cpn-toggle{background:none;border:1.5px solid var(--bdr);border-radius:8px;padding:.3rem .75rem;font-size:.72rem;cursor:pointer;transition:.2s;font-weight:500}
+.cpn-toggle.act{background:var(--sage);border-color:var(--sage);color:#fff}
+.cpn-toggle:not(.act){color:var(--mid)}
+/* notifications */
+.notif-list{background:#fff;border-radius:16px;border:1px solid var(--bdr);overflow:hidden}
+.nf-item{display:flex;align-items:flex-start;gap:1rem;padding:1rem 1.4rem;border-bottom:1px solid rgba(192,21,42,.05);transition:background .2s;cursor:pointer}
+.nf-item:last-child{border-bottom:none}
+.nf-item:hover{background:rgba(253,232,237,.2)}
+.nf-item.unread{background:rgba(253,232,237,.35)}
+.nf-item.unread .nf-title{font-weight:600}
+.nf-ico{width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.1rem;flex-shrink:0}
+.nf-ord{background:rgba(184,144,42,.12)}
+.nf-msg{flex:1}
+.nf-title{font-size:.87rem;color:var(--dark);margin-bottom:.18rem}
+.nf-body{font-size:.78rem;color:var(--mid);font-weight:300;line-height:1.5}
+.nf-time{font-size:.7rem;color:var(--mid);margin-top:.3rem}
+.nf-dot{width:8px;height:8px;border-radius:50%;background:var(--rose);flex-shrink:0;margin-top:.4rem}
+.nf-dot.read{background:transparent}
+/* add product form */
+.apf{background:#fff;border-radius:16px;border:1px solid var(--bdr);padding:1.8rem;margin-bottom:1.8rem}
+.apf-title{font-family:'Playfair Display',serif;font-size:1.05rem;font-weight:400;margin-bottom:1.2rem}
+.apf-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:.9rem}
+.apf-grid .amfg{margin-bottom:0}
+</style>
+</head>
+<body>
+<!-- PROGRESS BAR -->
+<div id="pgb"></div>
+<!-- TOAST -->
+<div id="tst"></div>
+<!-- ADMIN TOAST -->
+<div id="atst"></div>
+
+<!-- ═══════════ CART DRAWER ═══════════ -->
+<div class="cov" id="cov" onclick="closeCart()"></div>
+<div class="cdraw" id="cdraw">
+  <div class="cdh"><h3>My Bouquet 🌸</h3><button class="cdcl" onclick="closeCart()">✕</button></div>
+  <div class="cdbody" id="cdbody"></div>
+  <div class="cdft" id="cdft" style="display:none">
+    <div class="cdtr"><span style="font-size:.88rem;color:var(--mid)">Total</span><span class="cdta" id="ctot">$0.00</span></div>
+    <button class="cdcob" onclick="openCO()">Proceed to Checkout →</button>
+  </div>
+</div>
+
+<!-- ═══════════ CHECKOUT MODAL ═══════════ -->
+<div class="mbg" id="comod">
+  <div class="mbox">
+    <button class="mxb" onclick="closeMod('comod')">✕</button>
+    <div class="mtit">Complete Your Order 🌺</div>
+    <div class="msub">Fresh blooms delivered straight to your door</div>
+    <div class="fg2">
+      <div class="fg"><label>First Name</label><input id="cfn" placeholder="Sarah"/></div>
+      <div class="fg"><label>Last Name</label><input id="cln" placeholder="Johnson"/></div>
+    </div>
+    <div class="fg" style="margin-top:.9rem"><label>Email</label><input id="cem" type="email" placeholder="sarah@email.com"/></div>
+    <div class="fg2" style="margin-top:.9rem">
+      <div class="fg"><label>City</label><input id="cci" placeholder="London"/></div>
+      <div class="fg"><label>Postal Code</label><input id="cpo" placeholder="SW1A 1AA"/></div>
+    </div>
+    <div class="fg" style="margin-top:.9rem"><label>Country</label>
+      <select id="cco"><option>United Kingdom</option><option>United States</option><option>Pakistan</option><option>Canada</option><option>Australia</option><option>Germany</option><option>France</option><option>UAE</option><option>India</option><option>Other</option></select>
+    </div>
+    <button class="msbt" onclick="placeOrder()">Place Order 🌸</button>
+  </div>
+</div>
+
+<!-- ═══════════ ADMIN ORDER MODAL ═══════════ -->
+<div class="amod" id="ordmod">
+  <div class="ambox">
+    <button class="amx" onclick="closeAMod()">✕</button>
+    <div class="amtit">Order Details</div>
+    <div class="amsub" id="amodSub"></div>
+    <div id="amodCont"></div>
+    <div class="amff">
+      <button class="amsv" onclick="modalDeliver()">✅ Mark Delivered</button>
+      <button class="amcn" onclick="closeAMod()">Close</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════ MAIN NAV ═══════════ -->
+<nav id="nav">
+  <div class="nlogo" onclick="goTo('home')">Pé<em>tale</em></div>
+  <ul class="nlinks">
+    <li><a onclick="goTo('home');scrl('#shop')">Shop</a></li>
+    <li><a onclick="goTo('home');scrl('#cats')">Collections</a></li>
+    <li><a onclick="goTo('home');scrl('#why')">About</a></li>
+    <li><a onclick="goTo('home');scrl('#rev')">Reviews</a></li>
+  </ul>
+  <div class="nacts">
+    <button class="nbtn" onclick="openCart()">🛒<span class="cbdg" id="cbdg">0</span></button>
+    <button class="nsign" id="nsign" onclick="goTo('login')">Sign In</button>
+    <button class="hbg" onclick="document.getElementById('mbnav').classList.add('on')"><span></span><span></span><span></span></button>
+  </div>
+</nav>
+<div id="mbnav">
+  <button class="mbx" onclick="document.getElementById('mbnav').classList.remove('on')">✕</button>
+  <a onclick="goTo('home');document.getElementById('mbnav').classList.remove('on')">Shop</a>
+  <a onclick="goTo('login');document.getElementById('mbnav').classList.remove('on')">Sign In</a>
+  <a onclick="goTo('signup');document.getElementById('mbnav').classList.remove('on')">Sign Up</a>
+  <a onclick="goTo('admin');document.getElementById('mbnav').classList.remove('on')">Admin</a>
+</div>
+
+<!-- ═══════════════════════════════════════
+     PAGE: HOME
+═══════════════════════════════════════ -->
+<div class="view on" id="pg-home">
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hl">
+      <div class="htag">🌸 Spring Collection 2026</div>
+      <h1>Blooms That<br/><em>Speak</em><br/>From the Heart</h1>
+      <p class="hsub">Handpicked, artisan-arranged bouquets delivered same day. Because every moment deserves the beauty of fresh flowers.</p>
+      <div class="hbtns">
+        <button onclick="scrl('#shop')" style="background:var(--rose);color:#fff;border:none;padding:.85rem 2rem;border-radius:50px;font-size:.85rem;font-weight:500;cursor:pointer;transition:.25s" onmouseover="this.style.background='var(--rose-h)';this.style.transform='translateY(-2px)'" onmouseout="this.style.background='var(--rose)';this.style.transform=''">Shop Now</button>
+        <button onclick="scrl('#why')" style="background:transparent;color:var(--rose);border:1.5px solid var(--rose);padding:.85rem 2rem;border-radius:50px;font-size:.85rem;font-weight:500;cursor:pointer;transition:.25s" onmouseover="this.style.background='var(--rose)';this.style.color='#fff'" onmouseout="this.style.background='transparent';this.style.color='var(--rose)'">Our Story</button>
+      </div>
+      <div class="htrust">
+        <div class="hti"><span>🚚</span> Same-Day Delivery</div>
+        <div class="hti"><span>⭐</span> 4.9/5 Rating</div>
+        <div class="hti"><span>🌱</span> Sustainably Sourced</div>
+      </div>
+    </div>
+    <div class="hr">
+      <div class="hss">
+        <div class="hsl on">🌹</div>
+        <div class="hsl">🌷</div>
+        <div class="hsl">💐</div>
+      </div>
+      <div class="hdots">
+        <button class="hd on" onclick="setHS(0)"></button>
+        <button class="hd" onclick="setHS(1)"></button>
+        <button class="hd" onclick="setHS(2)"></button>
+      </div>
+      <div class="hfc hf1">🚚 <em>Same-Day Delivery</em></div>
+      <div class="hfc hf2">⭐ <em>4.9 / 5 Stars</em></div>
+    </div>
+  </section>
+
+  <!-- MARQUEE -->
+  <div class="mqstrip"><div class="mqin">
+    <span class="mqit">Roses <span class="mqd">✦</span></span><span class="mqit">Tulips <span class="mqd">✦</span></span><span class="mqit">Peonies <span class="mqd">✦</span></span><span class="mqit">Orchids <span class="mqd">✦</span></span><span class="mqit">Sunflowers <span class="mqd">✦</span></span><span class="mqit">Lilies <span class="mqd">✦</span></span><span class="mqit">Lavender <span class="mqd">✦</span></span><span class="mqit">Dahlias <span class="mqd">✦</span></span><span class="mqit">Jasmine <span class="mqd">✦</span></span><span class="mqit">Hydrangeas <span class="mqd">✦</span></span>
+    <span class="mqit">Roses <span class="mqd">✦</span></span><span class="mqit">Tulips <span class="mqd">✦</span></span><span class="mqit">Peonies <span class="mqd">✦</span></span><span class="mqit">Orchids <span class="mqd">✦</span></span><span class="mqit">Sunflowers <span class="mqd">✦</span></span><span class="mqit">Lilies <span class="mqd">✦</span></span><span class="mqit">Lavender <span class="mqd">✦</span></span><span class="mqit">Dahlias <span class="mqd">✦</span></span><span class="mqit">Jasmine <span class="mqd">✦</span></span><span class="mqit">Hydrangeas <span class="mqd">✦</span></span>
+  </div></div>
+
+  <!-- ══════════ CAROUSEL 1 — BESTSELLERS ══════════ -->
+  <section class="carousel-section car1-bg" id="car1">
+    <div class="car-label rev">
+      <div class="sey" style="justify-content:center"><div class="seyl"></div><span class="seyt">Bestselling Blooms</span></div>
+      <h2 class="st2">Our Most <em>Loved</em> Flowers</h2>
+    </div>
+    <div class="car-track-wrap">
+      <div class="car-track" id="ct1">
+        <div class="car-item" onclick="scrl('#shop')"><div class="car-item-inner g1"><span>🌹</span></div><div class="car-label-tag">Classic Red Roses</div><div class="car-price-tag">$42</div><div class="car-badge-tag bp">Popular</div></div>
+        <div class="car-item" onclick="scrl('#shop')"><div class="car-item-inner g10"><span>🌸</span></div><div class="car-label-tag">Blush Pink Roses</div><div class="car-price-tag">$38</div><div class="car-badge-tag bn">New</div></div>
+        <div class="car-item" onclick="scrl('#shop')"><div class="car-item-inner g2"><span>💐</span></div><div class="car-label-tag">Spring Garden Mix</div><div class="car-price-tag">$58</div><div class="car-badge-tag bp">Popular</div></div>
+        <div class="car-item" onclick="scrl('#shop')"><div class="car-item-inner g1"><span>🌷</span></div><div class="car-label-tag">Romantic Pink Cloud</div><div class="car-price-tag">$65</div><div class="car-badge-tag bp">Popular</div></div>
+        <div class="car-item" onclick="scrl('#shop')"><div class="car-item-inner g5"><span>🤍</span></div><div class="car-label-tag">White Orchid Elegance</div><div class="car-price-tag">$85</div><div class="car-badge-tag bp">Popular</div></div>
+        <div class="car-item" onclick="scrl('#shop')"><div class="car-item-inner g4"><span>💜</span></div><div class="car-label-tag">Deep Purple Roses</div><div class="car-price-tag">$55</div><div class="car-badge-tag bp">Popular</div></div>
+        <div class="car-item" onclick="scrl('#shop')"><div class="car-item-inner g8"><span>🌺</span></div><div class="car-label-tag">Exotic Tropical Blend</div><div class="car-price-tag">$95</div><div class="car-badge-tag bp">Popular</div></div>
+        <div class="car-item" onclick="scrl('#shop')"><div class="car-item-inner g3"><span>🌻</span></div><div class="car-label-tag">Sunflower Burst</div><div class="car-price-tag">$35</div><div class="car-badge-tag bp">Popular</div></div>
+        <div class="car-item" onclick="scrl('#shop')"><div class="car-item-inner g1"><span>🌹</span></div><div class="car-label-tag">Classic Red Roses</div><div class="car-price-tag">$42</div><div class="car-badge-tag bp">Popular</div></div>
+        <div class="car-item" onclick="scrl('#shop')"><div class="car-item-inner g10"><span>🌸</span></div><div class="car-label-tag">Blush Pink Roses</div><div class="car-price-tag">$38</div><div class="car-badge-tag bn">New</div></div>
+        <div class="car-item" onclick="scrl('#shop')"><div class="car-item-inner g2"><span>💐</span></div><div class="car-label-tag">Spring Garden Mix</div><div class="car-price-tag">$58</div><div class="car-badge-tag bp">Popular</div></div>
+        <div class="car-item" onclick="scrl('#shop')"><div class="car-item-inner g1"><span>🌷</span></div><div class="car-label-tag">Romantic Pink Cloud</div><div class="car-price-tag">$65</div><div class="car-badge-tag bp">Popular</div></div>
+        <div class="car-item" onclick="scrl('#shop')"><div class="car-item-inner g5"><span>🤍</span></div><div class="car-label-tag">White Orchid Elegance</div><div class="car-price-tag">$85</div><div class="car-badge-tag bp">Popular</div></div>
+        <div class="car-item" onclick="scrl('#shop')"><div class="car-item-inner g4"><span>💜</span></div><div class="car-label-tag">Deep Purple Roses</div><div class="car-price-tag">$55</div><div class="car-badge-tag bp">Popular</div></div>
+        <div class="car-item" onclick="scrl('#shop')"><div class="car-item-inner g8"><span>🌺</span></div><div class="car-label-tag">Exotic Tropical Blend</div><div class="car-price-tag">$95</div><div class="car-badge-tag bp">Popular</div></div>
+        <div class="car-item" onclick="scrl('#shop')"><div class="car-item-inner g3"><span>🌻</span></div><div class="car-label-tag">Sunflower Burst</div><div class="car-price-tag">$35</div><div class="car-badge-tag bp">Popular</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════ CAROUSEL 2 — NEW ARRIVALS (reverse) ══════════ -->
+  <section class="carousel-section car2-bg">
+    <div class="car-label rev">
+      <div class="sey" style="justify-content:center"><div class="seyl"></div><span class="seyt">Just Arrived</span></div>
+      <h2 class="st2">Fresh <em>New Arrivals</em></h2>
+    </div>
+    <div class="car-track-wrap">
+      <div class="car-track rev2" id="ct2">
+        <div class="car-item" onclick="scrl('#shop')"><div class="car-item-inner g10"><span>🌸</span></div><div class="car-label-tag">Blush Pink Roses</div><div class="car-price-tag">$38</div><div class="car-badge-tag bn">New</div></div>
+        <div class="car-item" onclick="scrl('#shop')"><div class="car-item-inner g4"><span>💜</span></div><div class="car-label-tag">Lavender Fields</div><div class="car-price-tag">$30</div><div class="car-badge-tag bn">New</div></div>
+        <div class="car-item" onclick="scrl('#shop')"><div class="car-item-inner g2"><span>🌷</span></div><div class="car-label-tag">Spring Tulip Mix</div><div class="car-price-tag">$32</div><div class="car-badge-tag bn">New</div></div>
+        <div class="car-item" onclick="scrl('#shop')"><div class="car-item-inner g1"><span>🌸</span></div><div class="car-label-tag">Pastel Dream Bouquet</div><div class="car-price-tag">$62</div><div class="car-badge-tag bn">New</div></div>
+        <div class="car-item" onclick="scrl('#shop')"><div class="car-item-inner g5"><span>💙</span></div><div class="car-label-tag">Blue Hydrangea Bundle</div><div class="car-price-tag">$44</div><div class="car-badge-tag bn">New</div></div>
+        <div class="car-item" onclick="scrl('#shop')"><div class="car-item-inner g3"><span>🍑</span></div><div class="car-label-tag">Peach Roses</div><div class="car-price-tag">$44</div><div class="car-badge-tag bn">New</div></div>
+        <div class="car-item" onclick="scrl('#shop')"><div class="car-item-inner g2"><span>🌙</span></div><div class="car-label-tag">Jasmine Night Bloom</div><div class="car-price-tag">$42</div><div class="car-badge-tag bn">New</div></div>
+        <div class="car-item" onclick="scrl('#shop')"><div class="car-item-inner g6"><span>🌹</span></div><div class="car-label-tag">Red Tulip Romance</div><div class="car-price-tag">$36</div><div class="car-badge-tag bn">New</div></div>
+        <div class="car-item" onclick="scrl('#shop')"><div class="car-item-inner g10"><span>🌸</span></div><div class="car-label-tag">Blush Pink Roses</div><div class="car-price-tag">$38</div><div class="car-badge-tag bn">New</div></div>
+        <div class="car-item" onclick="scrl('#shop')"><div class="car-item-inner g4"><span>💜</span></div><div class="car-label-tag">Lavender Fields</div><div class="car-price-tag">$30</div><div class="car-badge-tag bn">New</div></div>
+        <div class="car-item" onclick="scrl('#shop')"><div class="car-item-inner g2"><span>🌷</span></div><div class="car-label-tag">Spring Tulip Mix</div><div class="car-price-tag">$32</div><div class="car-badge-tag bn">New</div></div>
+        <div class="car-item" onclick="scrl('#shop')"><div class="car-item-inner g1"><span>🌸</span></div><div class="car-label-tag">Pastel Dream Bouquet</div><div class="car-price-tag">$62</div><div class="car-badge-tag bn">New</div></div>
+        <div class="car-item" onclick="scrl('#shop')"><div class="car-item-inner g5"><span>💙</span></div><div class="car-label-tag">Blue Hydrangea Bundle</div><div class="car-price-tag">$44</div><div class="car-badge-tag bn">New</div></div>
+        <div class="car-item" onclick="scrl('#shop')"><div class="car-item-inner g3"><span>🍑</span></div><div class="car-label-tag">Peach Roses</div><div class="car-price-tag">$44</div><div class="car-badge-tag bn">New</div></div>
+        <div class="car-item" onclick="scrl('#shop')"><div class="car-item-inner g2"><span>🌙</span></div><div class="car-label-tag">Jasmine Night Bloom</div><div class="car-price-tag">$42</div><div class="car-badge-tag bn">New</div></div>
+        <div class="car-item" onclick="scrl('#shop')"><div class="car-item-inner g6"><span>🌹</span></div><div class="car-label-tag">Red Tulip Romance</div><div class="car-price-tag">$36</div><div class="car-badge-tag bn">New</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════ CAROUSEL 3 — SALE & SEASONAL ══════════ -->
+  <section class="carousel-section car3-bg">
+    <div class="car-label rev">
+      <div class="sey" style="justify-content:center"><div class="seyl"></div><span class="seyt">Limited Offers</span></div>
+      <h2 class="st2">Sale &amp; <em>Seasonal Picks</em></h2>
+    </div>
+    <div class="car-track-wrap">
+      <div class="car-track rev3" id="ct3">
+        <div class="car-item" onclick="scrl('#shop')"><div class="car-item-inner g1"><span>🌹</span></div><div class="car-label-tag">Red &amp; White Mix Roses</div><div class="car-price-tag">$52</div><div class="car-badge-tag bs">Sale</div></div>
+        <div class="car-item" onclick="scrl('#shop')"><div class="car-item-inner g1"><span>🌸</span></div><div class="car-label-tag">Luxury Peony Bouquet</div><div class="car-price-tag">$75</div><div class="car-badge-tag bs">Sale</div></div>
+        <div class="car-item" onclick="scrl('#shop')"><div class="car-item-inner g3"><span>🌺</span></div><div class="car-label-tag">Bird of Paradise</div><div class="car-price-tag">$90</div><div class="car-badge-tag bs">Sale</div></div>
+        <div class="car-item" onclick="scrl('#shop')"><div class="car-item-inner g6"><span>🎄</span></div><div class="car-label-tag">Christmas Rose Wreath</div><div class="car-price-tag">$68</div><div class="car-badge-tag bs">Sale</div></div>
+        <div class="car-item" onclick="scrl('#shop')"><div class="car-item-inner g9"><span>🍂</span></div><div class="car-label-tag">Autumn Harvest Mix</div><div class="car-price-tag">$52</div><div class="car-badge-tag" style="background:#888;color:#fff;font-size:.62rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;padding:.28rem .78rem;border-radius:50px;position:absolute;top:.7rem;left:.7rem;z-index:2">Seasonal</div></div>
+        <div class="car-item" onclick="scrl('#shop')"><div class="car-item-inner g3"><span>🌻</span></div><div class="car-label-tag">Sunflower Burst</div><div class="car-price-tag">$35</div><div class="car-badge-tag bp">Popular</div></div>
+        <div class="car-item" onclick="scrl('#shop')"><div class="car-item-inner g7"><span>🌈</span></div><div class="car-label-tag">Rainbow Rose Bundle</div><div class="car-price-tag">$68</div><div class="car-badge-tag bp">Popular</div></div>
+        <div class="car-item" onclick="scrl('#shop')"><div class="car-item-inner g4"><span>💜</span></div><div class="car-label-tag">Purple Tulip Dream</div><div class="car-price-tag">$34</div><div class="car-badge-tag bp">Popular</div></div>
+        <div class="car-item" onclick="scrl('#shop')"><div class="car-item-inner g1"><span>🌹</span></div><div class="car-label-tag">Red &amp; White Mix Roses</div><div class="car-price-tag">$52</div><div class="car-badge-tag bs">Sale</div></div>
+        <div class="car-item" onclick="scrl('#shop')"><div class="car-item-inner g1"><span>🌸</span></div><div class="car-label-tag">Luxury Peony Bouquet</div><div class="car-price-tag">$75</div><div class="car-badge-tag bs">Sale</div></div>
+        <div class="car-item" onclick="scrl('#shop')"><div class="car-item-inner g3"><span>🌺</span></div><div class="car-label-tag">Bird of Paradise</div><div class="car-price-tag">$90</div><div class="car-badge-tag bs">Sale</div></div>
+        <div class="car-item" onclick="scrl('#shop')"><div class="car-item-inner g6"><span>🎄</span></div><div class="car-label-tag">Christmas Rose Wreath</div><div class="car-price-tag">$68</div><div class="car-badge-tag bs">Sale</div></div>
+        <div class="car-item" onclick="scrl('#shop')"><div class="car-item-inner g9"><span>🍂</span></div><div class="car-label-tag">Autumn Harvest Mix</div><div class="car-price-tag">$52</div></div>
+        <div class="car-item" onclick="scrl('#shop')"><div class="car-item-inner g3"><span>🌻</span></div><div class="car-label-tag">Sunflower Burst</div><div class="car-price-tag">$35</div><div class="car-badge-tag bp">Popular</div></div>
+        <div class="car-item" onclick="scrl('#shop')"><div class="car-item-inner g7"><span>🌈</span></div><div class="car-label-tag">Rainbow Rose Bundle</div><div class="car-price-tag">$68</div><div class="car-badge-tag bp">Popular</div></div>
+        <div class="car-item" onclick="scrl('#shop')"><div class="car-item-inner g4"><span>💜</span></div><div class="car-label-tag">Purple Tulip Dream</div><div class="car-price-tag">$34</div><div class="car-badge-tag bp">Popular</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CATEGORIES -->
+  <section class="sec secbg" id="cats">
+    <div class="sh rev">
+      <div class="sey"><div class="seyl"></div><span class="seyt">Browse By Type</span></div>
+      <h2 class="st2">Explore Our <em>Collections</em></h2>
+    </div>
+    <div class="catg rev">
+      <div class="catc on" id="cat-all" onclick="filterCat('all',this)"><span class="catic">💐</span><div class="catn">All Flowers</div><div class="catct">30 items</div></div>
+      <div class="catc" id="cat-roses" onclick="filterCat('roses',this)"><span class="catic">🌹</span><div class="catn">Roses</div><div class="catct">8 items</div></div>
+      <div class="catc" id="cat-tulips" onclick="filterCat('tulips',this)"><span class="catic">🌷</span><div class="catn">Tulips</div><div class="catct">5 items</div></div>
+      <div class="catc" id="cat-mixed" onclick="filterCat('mixed',this)"><span class="catic">🌸</span><div class="catn">Mixed Bouquets</div><div class="catct">7 items</div></div>
+      <div class="catc" id="cat-exotic" onclick="filterCat('exotic',this)"><span class="catic">🌺</span><div class="catn">Exotic</div><div class="catct">5 items</div></div>
+      <div class="catc" id="cat-seasonal" onclick="filterCat('seasonal',this)"><span class="catic">🌻</span><div class="catn">Seasonal</div><div class="catct">5 items</div></div>
+    </div>
+  </section>
+
+  <!-- SHOP -->
+  <section class="sec" id="shop">
+    <div class="sh rev">
+      <div class="sey"><div class="seyl"></div><span class="seyt">Our Products</span></div>
+      <h2 class="st2">Fresh <em>Arrivals</em></h2>
+      <p class="ssub">Every bouquet handcrafted with love, sourced from sustainable farms.</p>
+    </div>
+    <div class="fbar rev">
+      <button class="fb on" onclick="setFilt(this,'all')">All</button>
+      <button class="fb" onclick="setFilt(this,'roses')">Roses</button>
+      <button class="fb" onclick="setFilt(this,'tulips')">Tulips</button>
+      <button class="fb" onclick="setFilt(this,'mixed')">Mixed</button>
+      <button class="fb" onclick="setFilt(this,'exotic')">Exotic</button>
+      <button class="fb" onclick="setFilt(this,'seasonal')">Seasonal</button>
+      <div class="sbox"><span>🔍</span><input id="srch" placeholder="Search flowers…" oninput="doSrch()"/></div>
+    </div>
+    <div class="pgrid" id="pgrid"></div>
+  </section>
+
+  <!-- WHY US -->
+  <section class="sec" id="why">
+    <div class="sh rev">
+      <div class="sey"><div class="seyl"></div><span class="seyt">Why Pétale</span></div>
+      <h2 class="st2">Crafted with <em>Passion</em></h2>
+    </div>
+    <div class="wgrid rev">
+      <div class="wc"><div class="wic">🌱</div><div class="wtt">Sustainably Sourced</div><p class="wtx">All flowers sourced from certified sustainable farms, supporting local growers and the planet.</p></div>
+      <div class="wc"><div class="wic">🚚</div><div class="wtt">Same-Day Delivery</div><p class="wtx">Order before 2pm for guaranteed same-day delivery. Fresh blooms at your door by evening.</p></div>
+      <div class="wc"><div class="wic">💝</div><div class="wtt">Handcrafted with Love</div><p class="wtx">Each arrangement is personally assembled by our expert florists with care for every single petal.</p></div>
+      <div class="wc"><div class="wic">🎁</div><div class="wtt">Gift Wrapping</div><p class="wtx">Complimentary luxury gift wrapping and a personal message card included with every order.</p></div>
+    </div>
+  </section>
+
+  <!-- REVIEWS -->
+  <section class="sec secbg" id="rev">
+    <div class="sh rev">
+      <div class="sey"><div class="seyl"></div><span class="seyt">Testimonials</span></div>
+      <h2 class="st2">Customers <em>Love Us</em></h2>
+    </div>
+    <div class="tgrid rev">
+      <div class="tc"><div class="tst">★★★★★</div><p class="ttx">"The red rose bouquet was absolutely stunning. My wife cried happy tears! Delivered perfectly fresh and beautifully wrapped."</p><div class="tau"><div class="tav">👨</div><div><div class="tnm">James Wilson</div><div class="tdt">March 2026</div></div></div></div>
+      <div class="tc"><div class="tst">★★★★★</div><p class="ttx">"I order from Pétale every week for my office. The flowers are always pristine and the same-day delivery is genuinely same-day!"</p><div class="tau"><div class="tav">👩</div><div><div class="tnm">Sarah Mitchell</div><div class="tdt">February 2026</div></div></div></div>
+      <div class="tc"><div class="tst">★★★★★</div><p class="ttx">"The mixed spring bouquet was a work of art. Every flower was perfect. Pétale is the only florist I trust for special occasions."</p><div class="tau"><div class="tav">👩‍🦱</div><div><div class="tnm">Amara Khan</div><div class="tdt">January 2026</div></div></div></div>
+    </div>
+  </section>
+
+  <!-- NEWSLETTER -->
+  <section class="nlsec">
+    <div class="nlt rev">Get 15% Off Your <em style="font-style:italic">First Order</em></div>
+    <p class="nls rev">Join 18,000+ flower lovers for exclusive offers and seasonal arrivals.</p>
+    <div class="nlf rev">
+      <input class="nlinp" id="nlem" type="email" placeholder="your@email.com"/>
+      <button class="nlbtn" onclick="nlSub()">Subscribe 🌸</button>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="siteft">
+    <div class="ftg">
+      <div>
+        <span class="flog" onclick="goTo('home')">Pé<em>tale</em></span>
+        <p class="fbp">Handpicked flowers delivered with love. Sustainable, beautiful, always fresh.</p>
+      </div>
+      <div class="fcol"><h5>Shop</h5><ul><li onclick="scrl('#shop')">All Bouquets</li><li>Roses</li><li>Seasonal Picks</li><li>Gift Sets</li></ul></div>
+      <div class="fcol"><h5>Company</h5><ul><li>Our Story</li><li>Sustainability</li><li>Blog</li><li>Press</li></ul></div>
+      <div class="fcol"><h5>Help</h5><ul><li>Delivery Info</li><li>Returns</li><li onclick="goTo('login')">My Account</li><li onclick="goTo('admin')">Admin Panel</li></ul></div>
+    </div>
+    <div class="ftb">
+      <span>© 2026 Pétale Flower Boutique. All rights reserved.</span>
+      <div class="fsc"><div class="fsb">𝕏</div><div class="fsb">📷</div><div class="fsb">▶</div><div class="fsb">in</div></div>
+    </div>
+  </footer>
+</div>
+
+<!-- ═══════════════════════════════════════
+     PAGE: LOGIN
+═══════════════════════════════════════ -->
+<div class="view" id="pg-login">
+  <div class="authpg">
+    <div class="authbg" id="lbg"></div>
+    <div class="authp sm">
+      <div class="alw"><div class="aln" onclick="goTo('home')">Pé<em>tale</em></div><div class="als">Fresh Flower Boutique</div></div>
+      <div class="ati2">Welcome Back 🌸</div>
+      <div class="asub">Sign in to manage your orders and wishlist</div>
+      <div class="emsg" id="lerr"></div>
+      <div class="smsg" id="lsuc"></div>
+      <div class="afg"><label>Email Address</label><input type="email" id="lem" placeholder="your@email.com"/></div>
+      <div class="afg"><label>Password</label><input type="password" id="lpw" placeholder="••••••••" onkeydown="if(event.key==='Enter')doLogin()"/></div>
+      <div class="arow"><label class="rem"><input type="checkbox"/> Remember me</label><span class="forg">Forgot password?</span></div>
+      <button class="abtn2" onclick="doLogin()">Sign In</button>
+      <div class="adiv"><span>or continue with</span></div>
+      <div class="soclg">
+        <button class="socb" onclick="showE('lerr','Social login coming soon!')">🌐 Google</button>
+        <button class="socb" onclick="showE('lerr','Social login coming soon!')">📘 Facebook</button>
+      </div>
+      <div class="asw">Don't have an account? <a onclick="goTo('signup')">Sign up free</a></div>
+      <div class="adml"><a onclick="goTo('admin')">🔐 Admin Portal</a></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════
+     PAGE: SIGNUP
+═══════════════════════════════════════ -->
+<div class="view" id="pg-signup">
+  <div class="authpg">
+    <div class="authbg" id="sbg"></div>
+    <div class="authp lg">
+      <div class="alw"><div class="aln" onclick="goTo('home')">Pé<em>tale</em></div><div class="als">Fresh Flower Boutique</div></div>
+      <div class="ati2">Create Account 🌺</div>
+      <div class="asub">Join Pétale and get 15% off your first order</div>
+      <div class="perks">
+        <div class="perk">🎁 15% off first order</div>
+        <div class="perk">🚚 Free delivery over $50</div>
+        <div class="perk">💌 Exclusive offers</div>
+      </div>
+      <div class="emsg" id="serr"></div>
+      <div class="smsg" id="ssuc"></div>
+      <div class="afg2">
+        <div class="afg"><label>First Name</label><input id="sfn" placeholder="Sarah"/></div>
+        <div class="afg"><label>Last Name</label><input id="sln" placeholder="Johnson"/></div>
+      </div>
+      <div class="afg"><label>Email Address</label><input type="email" id="sem" placeholder="sarah@email.com"/></div>
+      <div class="afg"><label>Phone Number</label><input type="tel" id="sph" placeholder="+44 7700 000000"/></div>
+      <div class="afg2">
+        <div class="afg"><label>City</label><input id="sci" placeholder="London"/></div>
+        <div class="afg"><label>Country</label><select id="sco"><option>United Kingdom</option><option>United States</option><option>Pakistan</option><option>Canada</option><option>Australia</option><option>Germany</option><option>France</option><option>UAE</option><option>India</option><option>Other</option></select></div>
+      </div>
+      <div class="afg"><label>Password</label><input type="password" id="spw" placeholder="Min 8 characters" oninput="chkPw(this.value)"/>
+        <div class="sbar"><div class="sfill" id="sfill"></div></div>
+        <div class="slbl" id="slbl">Enter a password</div>
+      </div>
+      <div class="afg"><label>Confirm Password</label><input type="password" id="spw2" placeholder="Repeat password" onkeydown="if(event.key==='Enter')doSignup()"/></div>
+      <label class="trow"><input type="checkbox" id="sterms"/> I agree to the <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a></label>
+      <button class="abtn2" onclick="doSignup()">Create Account 🌸</button>
+      <div class="asw">Already have an account? <a onclick="goTo('login')">Sign in</a></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════
+     PAGE: ADMIN
+═══════════════════════════════════════ -->
+<div class="adv" id="pg-admin">
+  <div class="asbov" id="asbov" onclick="closeASb()"></div>
+  <aside class="asb" id="asb">
+    <div class="asblo">
+      <div class="logo" onclick="goTo('home')">Pé<em>tale</em></div>
+      <span class="albl">Admin Dashboard</span>
+    </div>
+    <nav class="asbnav">
+      <div class="asnl">Main</div>
+      <div class="asit on" onclick="showAP('dashboard',this)"><span class="si">📊</span>Dashboard</div>
+      <div class="asit" onclick="showAP('orders',this)"><span class="si">📦</span>Orders<span class="asibdg" id="pbdg" style="display:none">0</span></div>
+      <div class="asit" onclick="showAP('products',this)"><span class="si">🌸</span>Products</div>
+      <div class="asit" onclick="showAP('customers',this)"><span class="si">👥</span>Customers</div>
+      <div class="asnl">Config</div>
+      <div class="asit" onclick="showAP('settings',this)"><span class="si">⚙️</span>Settings</div>
+      <div class="asit" onclick="showAP('analytics',this)"><span class="si">📈</span>Analytics</div>
+      <div class="asit" onclick="showAP('coupons',this)"><span class="si">🎟️</span>Coupons</div>
+      <div class="asit" onclick="showAP('notifications',this)"><span class="si">🔔</span>Notifications<span class="asibdg">3</span></div>
+      <div class="asit" onclick="goTo('home')"><span class="si">🌐</span>View Store</div>
+    </nav>
+    <div class="asbft"><div class="asbfu"><div class="asuav">👑</div><div><div class="asun">Admin</div><div class="asur">Store Manager</div></div><button class="aslo" onclick="goTo('login')">↩</button></div></div>
+  </aside>
+  <div class="amain">
+    <div class="atb">
+      <div style="display:flex;align-items:center;gap:.8rem">
+        <button class="amobb" onclick="openASb()">☰</button>
+        <div class="atpt" id="atpt">Dashboard</div>
+      </div>
+      <div class="atbr">
+        <div class="ats2"><span>🔍</span><input id="asrch" placeholder="Search orders…" oninput="admSrch()"/></div>
+        <button class="atn">🔔</button>
+        <button class="atv" onclick="goTo('home')">Visit Store</button>
+      </div>
+    </div>
+    <div class="acon">
+
+      <!-- DASHBOARD PAGE -->
+      <div class="apg on" id="ap-dashboard">
+        <div class="srow">
+          <div class="sc"><div class="sct"><div><div class="scn" id="sc-ord">0</div><div class="scl">Total Orders</div></div><div class="scic">📦</div></div><div class="scch scup" id="sc-orch">—</div></div>
+          <div class="sc"><div class="sct"><div><div class="scn" id="sc-rev">$0</div><div class="scl">Total Revenue</div></div><div class="scic">💰</div></div><div class="scch scup">↑ All time</div></div>
+          <div class="sc"><div class="sct"><div><div class="scn" id="sc-cus">0</div><div class="scl">Customers</div></div><div class="scic">👥</div></div><div class="scch scup">Registered users</div></div>
+          <div class="sc"><div class="sct"><div><div class="scn" id="sc-pen">0</div><div class="scl">Pending Orders</div></div><div class="scic">⏳</div></div><div class="scch scdn">Needs attention</div></div>
+        </div>
+        <div class="crow">
+          <div class="cbox"><div class="ctit">Monthly Orders — 2026</div><div class="bchart" id="bchart"></div>
+            <div style="display:flex;justify-content:space-around;margin-top:.5rem">
+              <span style="font-size:.62rem;color:var(--mid)">Jan</span><span style="font-size:.62rem;color:var(--mid)">Feb</span><span style="font-size:.62rem;color:var(--mid)">Mar</span><span style="font-size:.62rem;color:var(--mid)">Apr</span><span style="font-size:.62rem;color:var(--mid)">May</span><span style="font-size:.62rem;color:var(--mid)">Jun</span>
+            </div>
+          </div>
+          <div class="cbox"><div class="ctit">Orders by Status</div><div class="dlist" id="dlist"></div></div>
+        </div>
+        <div class="tcard"><div class="thead2"><div class="thtit">Recent Orders</div><button class="tff" onclick="showAP('orders',document.querySelectorAll('.asit')[1])">View All →</button></div>
+          <div class="twrap"><table><thead><tr><th>Order ID</th><th>Customer</th><th>Email</th><th>Total</th><th>Status</th><th>Date</th></tr></thead><tbody id="recBody"></tbody></table></div>
+        </div>
+      </div>
+
+      <!-- ORDERS PAGE -->
+      <div class="apg" id="ap-orders">
+        <div class="tcard">
+          <div class="thead2"><div class="thtit">Customer Orders</div>
+            <div class="tfilts">
+              <button class="tff on" onclick="aFilt('all',this)">All</button>
+              <button class="tff" onclick="aFilt('Pending',this)">Pending</button>
+              <button class="tff" onclick="aFilt('Delivered',this)">Delivered</button>
+              <button class="tff" onclick="aFilt('Processing',this)">Processing</button>
+              <button class="tff" onclick="aFilt('Cancelled',this)">Cancelled</button>
+            </div>
+          </div>
+          <div class="twrap">
+            <table>
+              <thead><tr><th>Order ID</th><th>Customer Name</th><th>Email</th><th>City</th><th>Country</th><th>Postal Code</th><th>Items</th><th>Total</th><th>Status</th><th>Date</th><th>Actions</th></tr></thead>
+              <tbody id="ordBody"></tbody>
+            </table>
+          </div>
+          <div class="pag"><span class="pagi" id="pinfo">0 orders</span><div class="pagbs" id="pbtns"></div></div>
+        </div>
+      </div>
+
+      <!-- PRODUCTS PAGE -->
+      <div class="apg" id="ap-products">
+        <div class="tcard"><div class="thead2"><div class="thtit">Product Inventory — 30 Products</div></div>
+          <div class="twrap">
+            <table><thead><tr><th>Product</th><th>Category</th><th>Price</th><th>Stock Status</th><th>Badge</th><th>Action</th></tr></thead>
+            <tbody id="prodAdmBody"></tbody></table>
+          </div>
+        </div>
+      </div>
+
+      <!-- CUSTOMERS PAGE -->
+      <div class="apg" id="ap-customers">
+        <div class="tcard"><div class="thead2"><div class="thtit">Registered Customers</div></div>
+          <div class="twrap">
+            <table><thead><tr><th>Customer</th><th>Email</th><th>City</th><th>Country</th><th>Phone</th><th>Joined</th><th>Orders</th></tr></thead>
+            <tbody id="custBody"></tbody></table>
+          </div>
+        </div>
+      </div>
+
+      <!-- SETTINGS PAGE -->
+      <div class="apg" id="ap-settings">
+        <div style="background:#fff;border-radius:16px;border:1px solid var(--bdr);padding:2rem;max-width:500px">
+          <div style="font-family:'Playfair Display',serif;font-size:1.2rem;margin-bottom:1.4rem">Store Settings</div>
+          <div class="amfg"><label>Store Name</label><input value="Pétale Flower Boutique"/></div>
+          <div class="amfg"><label>Admin Email</label><input value="admin@petale.com"/></div>
+          <div class="amfg"><label>Currency</label><select><option>USD ($)</option><option>GBP (£)</option><option>EUR (€)</option><option>PKR (₨)</option></select></div>
+          <div class="amfg"><label>Delivery Fee</label><input value="$5.99"/></div>
+          <div class="amfg"><label>Free Delivery Over</label><input value="$50.00"/></div>
+          <button class="amsv" style="width:auto;padding:.78rem 2rem;margin-top:.5rem;cursor:pointer" onclick="admT('Settings saved! ✅')">Save Settings</button>
+        </div>
+      </div>
+
+    </div><!-- acon -->
+    <!-- ══════ ANALYTICS PAGE ══════ -->
+    <div class="apg" id="ap-analytics" style="display:none">
+      <div class="srow ana-grid">
+        <div class="ana-card ana-c1"><div class="ana-top"><div><div class="ana-lbl">Total Revenue</div><div class="ana-num" id="ana-rev">$0</div></div><div class="ana-ico">💰</div></div><div class="ana-trend ana-up">↑ 18% vs last month</div><div class="mini-bars" id="mb-rev"></div></div>
+        <div class="ana-card ana-c2"><div class="ana-top"><div><div class="ana-lbl">Avg Order Value</div><div class="ana-num" id="ana-aov">$0</div></div><div class="ana-ico">🛒</div></div><div class="ana-trend ana-up">↑ 7% vs last month</div><div class="mini-bars" id="mb-aov"></div></div>
+        <div class="ana-card ana-c3"><div class="ana-top"><div><div class="ana-lbl">Conversion Rate</div><div class="ana-num">3.8%</div></div><div class="ana-ico">📊</div></div><div class="ana-trend ana-dn">↓ 0.3% vs last month</div><div class="mini-bars" id="mb-conv"></div></div>
+        <div class="ana-card ana-c4"><div class="ana-top"><div><div class="ana-lbl">Repeat Customers</div><div class="ana-num">42%</div></div><div class="ana-ico">🔁</div></div><div class="ana-trend ana-up">↑ 5% vs last month</div><div class="mini-bars" id="mb-rep"></div></div>
+        <div class="ana-card ana-c5"><div class="ana-top"><div><div class="ana-lbl">Abandoned Carts</div><div class="ana-num">12</div></div><div class="ana-ico">🛒</div></div><div class="ana-trend ana-dn">↑ 2 vs yesterday</div><div class="mini-bars" id="mb-ab"></div></div>
+      </div>
+      <div class="top-prods">
+        <div class="tp-card">
+          <div class="tp-head">🏆 Top Selling Products</div>
+          <div class="tp-list" id="topProdsList"></div>
+        </div>
+        <div class="tp-card">
+          <div class="tp-head">🌍 Orders by Country</div>
+          <div class="tp-list" id="countryList"></div>
+        </div>
+      </div>
+      <div class="act-feed">
+        <div class="af-head">⚡ Recent Activity</div>
+        <div class="af-list" id="actFeed"></div>
+      </div>
+    </div>
+
+    <!-- ══════ COUPONS PAGE ══════ -->
+    <div class="apg" id="ap-coupons" style="display:none">
+      <div class="apf">
+        <div class="apf-title">➕ Create New Coupon</div>
+        <div class="apf-grid">
+          <div class="amfg"><label>Coupon Code</label><input id="cpnCode" placeholder="e.g. SPRING25" style="text-transform:uppercase"/></div>
+          <div class="amfg"><label>Discount</label><input id="cpnDisc" placeholder="e.g. 25% or $10"/></div>
+          <div class="amfg"><label>Expiry Date</label><input type="date" id="cpnExp"/></div>
+          <div class="amfg"><label>Min Order ($)</label><input id="cpnMin" placeholder="e.g. 50"/></div>
+          <div class="amfg"><label>Max Uses</label><input id="cpnMax" placeholder="e.g. 100"/></div>
+          <div class="amfg" style="display:flex;align-items:flex-end"><button class="amsv" style="width:100%;cursor:pointer" onclick="addCoupon()">Create Coupon</button></div>
+        </div>
+      </div>
+      <div class="cpn-grid" id="cpnGrid"></div>
+    </div>
+
+    <!-- ══════ NOTIFICATIONS PAGE ══════ -->
+    <div class="apg" id="ap-notifications" style="display:none">
+      <div class="tcard">
+        <div class="thead2">
+          <div class="thtit">🔔 All Notifications</div>
+          <button class="tff" onclick="markAllRead()">Mark All Read</button>
+        </div>
+        <div class="notif-list" id="notifList"></div>
+      </div>
+    </div>
+  </div><!-- amain -->
+</div><!-- admin -->
+
+<script>
+'use strict';
+
+/* ═══════════════════ PRODUCTS DATA (30) ═══════════════════ */
+const PRODS = [
+  {id:1,name:'Classic Red Roses',cat:'roses',price:42,badge:'popular',imgs:['🌹','💐','🌺'],bg:'g1',desc:'12 premium red roses, timeless romance',inStock:true},
+  {id:2,name:'Blush Pink Roses',cat:'roses',price:38,badge:'new',imgs:['🌸','🌷','💗'],bg:'g6',desc:'12 blush pink roses, soft and delicate',inStock:true},
+  {id:3,name:'White Elegance Roses',cat:'roses',price:45,badge:null,imgs:['🤍','🌸','🌹'],bg:'g2',desc:'Pristine white roses for pure occasions',inStock:true},
+  {id:4,name:'Red & White Mix Roses',cat:'roses',price:52,badge:'sale',oldPrice:65,imgs:['🌹','🤍','💐'],bg:'g1',desc:'Striking contrast of red & white roses',inStock:true},
+  {id:5,name:'Golden Yellow Roses',cat:'roses',price:40,badge:null,imgs:['🌼','🌻','🌹'],bg:'g3',desc:'Sunny yellow roses bring joy and warmth',inStock:false},
+  {id:6,name:'Deep Purple Roses',cat:'roses',price:55,badge:'popular',imgs:['💜','🌹','🌺'],bg:'g4',desc:'Rare deep purple roses, mysterious & bold',inStock:true},
+  {id:7,name:'Peach Roses',cat:'roses',price:44,badge:'new',imgs:['🍑','🌸','🌷'],bg:'g3',desc:"Warm peach tones, perfect for Mother's Day",inStock:true},
+  {id:8,name:'Rainbow Rose Bundle',cat:'roses',price:68,badge:'popular',imgs:['🌈','🌹','🌷'],bg:'g7',desc:'Multicolored roses — a true showstopper',inStock:false},
+  {id:9,name:'Spring Tulip Mix',cat:'tulips',price:32,badge:'new',imgs:['🌷','🌸','🌼'],bg:'g2',desc:'Mixed colour spring tulips, vibrant & fresh',inStock:true},
+  {id:10,name:'Pink Tulip Bouquet',cat:'tulips',price:30,badge:null,imgs:['🌷','💗','🌸'],bg:'g1',desc:'Delicate pink tulips tied with satin ribbon',inStock:true},
+  {id:11,name:'White Tulips',cat:'tulips',price:28,badge:null,imgs:['🤍','🌷','🌸'],bg:'g5',desc:'Crisp white tulips, minimal and elegant',inStock:true},
+  {id:12,name:'Purple Tulip Dream',cat:'tulips',price:34,badge:'popular',imgs:['💜','🌷','🌸'],bg:'g4',desc:'Rich purple tulips for a majestic look',inStock:false},
+  {id:13,name:'Red Tulip Romance',cat:'tulips',price:36,badge:null,imgs:['❤️','🌷','🌹'],bg:'g6',desc:'Bold red tulips for passionate expressions',inStock:true},
+  {id:14,name:'Spring Garden Mix',cat:'mixed',price:58,badge:'popular',imgs:['💐','🌸','🌼'],bg:'g2',desc:'A lush mix of seasonal spring blooms',inStock:true},
+  {id:15,name:'Pastel Dream Bouquet',cat:'mixed',price:62,badge:'new',imgs:['🌸','🌷','💐'],bg:'g1',desc:'Soft pastel tones, dreamy and romantic',inStock:true},
+  {id:16,name:'Wildflower Meadow',cat:'mixed',price:48,badge:null,imgs:['🌼','🌻','💐'],bg:'g7',desc:'Rustic wildflowers tied with twine',inStock:true},
+  {id:17,name:'Luxury Peony Bouquet',cat:'mixed',price:75,badge:'sale',oldPrice:95,imgs:['🌸','💐','🌹'],bg:'g1',desc:'Full, lush peonies — the height of luxury',inStock:true},
+  {id:18,name:'Sunset Colours Mix',cat:'mixed',price:56,badge:null,imgs:['🌺','🌻','🌸'],bg:'g3',desc:'Warm sunset-inspired florals, vivid & bold',inStock:false},
+  {id:19,name:'Blue Hydrangea Bundle',cat:'mixed',price:44,badge:'new',imgs:['💙','🌸','💐'],bg:'g5',desc:'Stunning blue hydrangeas for cool elegance',inStock:true},
+  {id:20,name:'Romantic Pink Cloud',cat:'mixed',price:65,badge:'popular',imgs:['🌸','💗','🌷'],bg:'g10',desc:'A cloud of pink flowers, utterly romantic',inStock:true},
+  {id:21,name:'White Orchid Elegance',cat:'exotic',price:85,badge:'popular',imgs:['🤍','🌺','🌸'],bg:'g5',desc:'Graceful white orchids in a glass vessel',inStock:true},
+  {id:22,name:'Purple Orchid Bundle',cat:'exotic',price:78,badge:null,imgs:['💜','🌺','💐'],bg:'g4',desc:'Vibrant purple orchids, exotic & striking',inStock:true},
+  {id:23,name:'Bird of Paradise',cat:'exotic',price:90,badge:'sale',oldPrice:115,imgs:['🌺','🔥','🌿'],bg:'g3',desc:'Dramatic tropical bird of paradise stems',inStock:false},
+  {id:24,name:'Anthurium Red',cat:'exotic',price:72,badge:null,imgs:['❤️','🌺','🌿'],bg:'g6',desc:'Glossy red anthuriums, bold and lasting',inStock:true},
+  {id:25,name:'Exotic Tropical Blend',cat:'exotic',price:95,badge:'popular',imgs:['🌺','🌴','💐'],bg:'g8',desc:'A stunning tropical arrangement',inStock:true},
+  {id:26,name:'Sunflower Burst',cat:'seasonal',price:35,badge:'popular',imgs:['🌻','🌼','☀️'],bg:'g3',desc:'Cheerful sunflowers bursting with sunshine',inStock:true},
+  {id:27,name:'Lavender Fields',cat:'seasonal',price:30,badge:'new',imgs:['💜','🌿','🌸'],bg:'g4',desc:'Fresh lavender bundles, fragrant & calming',inStock:true},
+  {id:28,name:'Autumn Harvest Mix',cat:'seasonal',price:52,badge:null,imgs:['🍂','🌺','🍁'],bg:'g9',desc:'Warm autumnal tones, rich and seasonal',inStock:false},
+  {id:29,name:'Christmas Rose Wreath',cat:'seasonal',price:68,badge:'sale',oldPrice:85,imgs:['🎄','🌹','❄️'],bg:'g6',desc:'Festive roses & winter greens arrangement',inStock:true},
+  {id:30,name:'Jasmine Night Bloom',cat:'seasonal',price:42,badge:'new',imgs:['🌙','🌸','🌿'],bg:'g2',desc:'Fragrant jasmine, evening-blooming flowers',inStock:true},
+];
+
+const SEEDS = [
+  {id:'ORD-1001',name:'Emily Clarke',email:'emily@email.com',city:'London',country:'United Kingdom',postal:'W1A 0AA',items:'Classic Red Roses, Blush Pink Roses',total:'$80.00',status:'Delivered',date:'15/03/2026'},
+  {id:'ORD-1002',name:'Fatima Malik',email:'fatima@email.com',city:'Karachi',country:'Pakistan',postal:'75500',items:'Luxury Peony Bouquet',total:'$75.00',status:'Pending',date:'16/03/2026'},
+  {id:'ORD-1003',name:'Carlos Rivera',email:'carlos@email.com',city:'New York',country:'United States',postal:'10001',items:'Spring Garden Mix, Sunflower Burst',total:'$93.00',status:'Delivered',date:'14/03/2026'},
+  {id:'ORD-1004',name:'Aisha Patel',email:'aisha@email.com',city:'Mumbai',country:'India',postal:'400001',items:'White Orchid Elegance',total:'$85.00',status:'Processing',date:'16/03/2026'},
+  {id:'ORD-1005',name:'James Anderson',email:'james@email.com',city:'Manchester',country:'United Kingdom',postal:'M1 1AA',items:'Rainbow Rose Bundle',total:'$68.00',status:'Cancelled',date:'13/03/2026'},
+  {id:'ORD-1006',name:'Layla Hassan',email:'layla@email.com',city:'Dubai',country:'UAE',postal:'00000',items:'Purple Orchid Bundle, Lavender Fields',total:'$108.00',status:'Pending',date:'16/03/2026'},
+  {id:'ORD-1007',name:'Tom Williams',email:'tom@email.com',city:'Sydney',country:'Australia',postal:'2000',items:'Wildflower Meadow',total:'$48.00',status:'Delivered',date:'12/03/2026'},
+  {id:'ORD-1008',name:'Mei Lin',email:'mei@email.com',city:'Shanghai',country:'China',postal:'200001',items:'Pastel Dream Bouquet',total:'$62.00',status:'Pending',date:'16/03/2026'},
+  {id:'ORD-1009',name:'Rania Osei',email:'rania@email.com',city:'Accra',country:'Ghana',postal:'00233',items:'Red & White Mix Roses',total:'$52.00',status:'Delivered',date:'11/03/2026'},
+  {id:'ORD-1010',name:'Viktor Novak',email:'viktor@email.com',city:'Prague',country:'Czech Republic',postal:'11000',items:'Blue Hydrangea Bundle',total:'$44.00',status:'Processing',date:'15/03/2026'},
+];
+
+/* ═══════════════════ STATE ═══════════════════ */
+let cart=[], wl=new Set(), filt='all', srch='', sidx={},
+    admFilt='all', admPage=1, selOid=null, hIdx=0,
+    admProds=PRODS.map(p=>({...p}));
+const PG=8;
+
+/* ═══════════════════ ROUTER ═══════════════════ */
+function goTo(p){
+  document.querySelectorAll('.view').forEach(x=>x.classList.remove('on'));
+  document.querySelectorAll('.adv').forEach(x=>x.classList.remove('on'));
+  document.getElementById('nav').style.display='flex';
+  if(p==='admin'){
+    document.getElementById('pg-admin').classList.add('on');
+    document.getElementById('nav').style.display='none';
+    initAdm();
+  } else {
+    document.getElementById('pg-'+p).classList.add('on');
+  }
+  window.scrollTo(0,0);
+  const u=JSON.parse(localStorage.getItem('petal_u')||'null');
+  const b=document.getElementById('nsign');
+  if(u){b.textContent=u.fn||'Account';b.onclick=()=>{};}
+  else{b.textContent='Sign In';b.onclick=()=>goTo('login');}
+  if(p==='login')spawnP('lbg');
+  if(p==='signup')spawnP('sbg');
+  document.querySelectorAll('.rev').forEach(el=>obs.observe(el));
+}
+
+function scrl(id){setTimeout(()=>{const el=document.querySelector(id);if(el)el.scrollIntoView({behavior:'smooth'});},120);}
+
+/* ═══════════════════ SCROLL / PROGRESS ═══════════════════ */
+window.addEventListener('scroll',()=>{
+  document.getElementById('nav').classList.toggle('sc',scrollY>40);
+  const pct=(scrollY/(document.body.scrollHeight-innerHeight))*100;
+  document.getElementById('pgb').style.width=pct+'%';
+});
+
+/* ═══════════════════ REVEAL ═══════════════════ */
+const obs=new IntersectionObserver(e=>e.forEach(x=>{if(x.isIntersecting)x.target.classList.add('vis');}),{threshold:.1});
+document.querySelectorAll('.rev').forEach(el=>obs.observe(el));
+
+/* ═══════════════════ HERO SLIDESHOW ═══════════════════ */
+function setHS(i){
+  document.querySelectorAll('.hsl').forEach((s,j)=>s.classList.toggle('on',j===i));
+  document.querySelectorAll('.hd').forEach((d,j)=>d.classList.toggle('on',j===i));
+  hIdx=i;
+}
+setInterval(()=>setHS((hIdx+1)%3),3600);
+
+/* ═══════════════════ PRODUCTS ═══════════════════ */
+function getF(){
+  return PRODS.filter(p=>(filt==='all'||p.cat===filt)&&(!srch||p.name.toLowerCase().includes(srch.toLowerCase())));
+}
+
+function renderP(list){
+  const g=document.getElementById('pgrid');
+  if(!list.length){
+    g.innerHTML='<div style="grid-column:1/-1;text-align:center;padding:4rem;color:var(--mid)"><div style="font-size:3rem">🌿</div><p style="margin-top:1rem;font-weight:300">No flowers found.</p></div>';
+    return;
+  }
+  g.innerHTML=list.map(p=>{
+    if(!sidx[p.id])sidx[p.id]=0;
+    const si=sidx[p.id];
+    const bdg=p.inStock?(p.badge?`<div class="pbdg b${p.badge[0]}">${p.badge}</div>`:''):`<div class="pbdg bo">Out of Stock</div>`;
+    const sls=p.imgs.map((im,i)=>`<div class="psl ${i===si?'on':''}"><div class="${p.bg}" style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:5rem">${im}</div></div>`).join('');
+    const dts=p.imgs.map((_,i)=>`<button class="pdt ${i===si?'on':''}" onclick="sSl(event,${p.id},${i})"></button>`).join('');
+    return `<div class="pcard ${p.inStock?'':'oos'}" id="pc-${p.id}">
+      <div class="pimgw">
+        <div class="pss" id="pss-${p.id}">${sls}</div>
+        <div class="pdts">${dts}</div>
+        <button class="pnav pv" onclick="cSl(event,${p.id},-1)">‹</button>
+        <button class="pnav nx" onclick="cSl(event,${p.id},1)">›</button>
+        ${bdg}
+        <button class="pwl ${wl.has(p.id)?'on':''}" onclick="togWl(event,${p.id})">${wl.has(p.id)?'❤️':'🤍'}</button>
+      </div>
+      <div class="pbdy">
+        <div class="pct">${p.cat}</div>
+        <div class="pnm">${p.name}</div>
+        <div class="pds">${p.desc}</div>
+        <div class="pft">
+          <div class="ppr">$${p.price}${p.oldPrice?`<span class="pop">$${p.oldPrice}</span>`:''}</div>
+          ${p.inStock?`<button class="adb" id="ab-${p.id}" onclick="addC(${p.id})">+</button>`:`<span class="ooslbl">Out of Stock</span>`}
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+  document.querySelectorAll('.rev').forEach(el=>obs.observe(el));
+}
+
+function sSl(e,id,idx){
+  e.stopPropagation();
+  sidx[id]=idx;
+  const w=document.getElementById('pss-'+id);if(!w)return;
+  w.querySelectorAll('.psl').forEach((s,i)=>s.classList.toggle('on',i===idx));
+  const c=document.getElementById('pc-'+id);
+  if(c)c.querySelectorAll('.pdt').forEach((d,i)=>d.classList.toggle('on',i===idx));
+}
+function cSl(e,id,dir){
+  e.stopPropagation();
+  const p=PRODS.find(x=>x.id===id);if(!p)return;
+  const n=((sidx[id]||0)+dir+p.imgs.length)%p.imgs.length;
+  sSl(e,id,n);
+}
+
+function setFilt(btn,cat){
+  filt=cat;
+  document.querySelectorAll('.fb').forEach(b=>b.classList.remove('on'));
+  btn.classList.add('on');
+  renderP(getF());
+}
+function filterCat(cat,card){
+  filt=cat;
+  document.querySelectorAll('.catc').forEach(c=>c.classList.remove('on'));
+  card.classList.add('on');
+  document.querySelectorAll('.fb').forEach(b=>b.classList.toggle('on',b.textContent.toLowerCase().includes(cat==='all'?'all':cat)));
+  renderP(getF());
+  scrl('#shop');
+}
+function doSrch(){srch=document.getElementById('srch').value;renderP(getF());}
+
+/* ═══════════════════ CART ═══════════════════ */
+function addC(id){
+  const p=PRODS.find(x=>x.id===id);
+  const ex=cart.find(x=>x.id===id);
+  if(ex)ex.qty++;else cart.push({...p,qty:1});
+  updBdg();renderCD();
+  showT(`${p.name} added! 🌸`);
+  const btn=document.getElementById('ab-'+id);
+  if(btn){btn.textContent='✓';btn.style.background='var(--sage)';setTimeout(()=>{btn.textContent='+';btn.style.background='';},1100);}
+}
+function updBdg(){document.getElementById('cbdg').textContent=cart.reduce((s,i)=>s+i.qty,0);}
+function renderCD(){
+  const b=document.getElementById('cdbody'),f=document.getElementById('cdft');
+  if(!cart.length){b.innerHTML='<div class="cdmt"><div>🌿</div><p>Your cart is empty</p></div>';f.style.display='none';return;}
+  f.style.display='block';
+  b.innerHTML=cart.map(it=>`<div class="cdit">
+    <div class="cdiimg">${it.imgs[0]}</div>
+    <div class="cdinf">
+      <div class="cdinm">${it.name}</div>
+      <div class="cdip">$${(it.price*it.qty).toFixed(2)}</div>
+      <div class="cdiq"><button class="qb" onclick="chQ(${it.id},-1)">−</button><span class="qn">${it.qty}</span><button class="qb" onclick="chQ(${it.id},1)">+</button></div>
+    </div>
+    <button class="cdidl" onclick="rmC(${it.id})">✕</button>
+  </div>`).join('');
+  document.getElementById('ctot').textContent='$'+cart.reduce((s,i)=>s+i.price*i.qty,0).toFixed(2);
+}
+function chQ(id,d){const it=cart.find(x=>x.id===id);if(!it)return;it.qty=Math.max(0,it.qty+d);if(it.qty===0)cart=cart.filter(x=>x.id!==id);updBdg();renderCD();}
+function rmC(id){cart=cart.filter(x=>x.id!==id);updBdg();renderCD();}
+function openCart(){document.getElementById('cov').classList.add('on');document.getElementById('cdraw').classList.add('on');renderCD();}
+function closeCart(){document.getElementById('cov').classList.remove('on');document.getElementById('cdraw').classList.remove('on');}
+
+/* ═══════════════════ WISHLIST ═══════════════════ */
+function togWl(e,id){
+  e.stopPropagation();
+  if(wl.has(id))wl.delete(id);else{wl.add(id);showT('Added to wishlist 💗');}
+  renderP(getF());
+}
+
+/* ═══════════════════ CHECKOUT ═══════════════════ */
+function openCO(){closeCart();document.getElementById('comod').classList.add('on');}
+function closeMod(id){document.getElementById(id).classList.remove('on');}
+function placeOrder(){
+  const fn=document.getElementById('cfn').value.trim(),ln=document.getElementById('cln').value.trim(),
+        em=document.getElementById('cem').value.trim(),ci=document.getElementById('cci').value.trim(),
+        po=document.getElementById('cpo').value.trim(),co=document.getElementById('cco').value;
+  if(!fn||!ln||!em||!ci||!po){showT('Please fill all fields! 🌷');return;}
+  const ords=getOrds(),oid='ORD-'+Date.now(),tot=cart.reduce((s,i)=>s+i.price*i.qty,0);
+  ords.push({id:oid,name:fn+' '+ln,email:em,city:ci,country:co,postal:po,
+    items:cart.map(i=>i.name).join(', '),total:'$'+tot.toFixed(2),status:'Pending',date:new Date().toLocaleDateString()});
+  saveOrds(ords);cart=[];updBdg();renderCD();closeMod('comod');
+  showT('Order placed! ID: '+oid+' 🌸');
+}
+
+/* ═══════════════════ TOAST ═══════════════════ */
+function showT(msg){const t=document.getElementById('tst');t.textContent=msg;t.classList.add('on');setTimeout(()=>t.classList.remove('on'),3000);}
+function admT(msg){const t=document.getElementById('atst');t.textContent=msg;t.classList.add('on');setTimeout(()=>t.classList.remove('on'),2800);}
+
+/* ═══════════════════ NEWSLETTER ═══════════════════ */
+function nlSub(){
+  const v=document.getElementById('nlem').value;
+  if(!v||!v.includes('@')){showT('Please enter a valid email!');return;}
+  showT('Welcome! Use code PETAL15 for 15% off 🌸');
+  document.getElementById('nlem').value='';
+}
+
+/* ═══════════════════ AUTH PETALS ═══════════════════ */
+function spawnP(cid){
+  const c=document.getElementById(cid);if(!c||c.children.length)return;
+  const em=['🌸','🌺','🌹','🌷','🌼','💐'];
+  for(let i=0;i<16;i++){
+    const el=document.createElement('div');el.className='abp';
+    el.textContent=em[Math.floor(Math.random()*em.length)];
+    el.style.cssText=`left:${Math.random()*100}vw;font-size:${1.5+Math.random()*2}rem;animation-duration:${10+Math.random()*14}s;animation-delay:${Math.random()*10}s`;
+    c.appendChild(el);
+  }
+}
+
+/* ═══════════════════ AUTH HELPERS ═══════════════════ */
+function showE(id,msg,type='err'){
+  const el=document.getElementById(id);if(!el)return;
+  el.className=type==='suc'?'smsg':'emsg';el.style.display='block';el.textContent=msg;
+}
+
+/* ═══════════════════ LOGIN ═══════════════════ */
+function doLogin(){
+  const em=(document.getElementById('lem').value||'').trim(),pw=document.getElementById('lpw').value||'';
+  if(!em||!pw){showE('lerr','Please fill in all fields.');return;}
+  if(em==='admin@petale.com'&&pw==='admin123'){showE('lsuc','Admin login successful! Redirecting…','suc');setTimeout(()=>goTo('admin'),1200);return;}
+  const users=JSON.parse(localStorage.getItem('petal_users')||'[]');
+  const u=users.find(x=>x.email===em&&x.password===pw);
+  if(u){
+    localStorage.setItem('petal_u',JSON.stringify({fn:u.firstName,email:u.email}));
+    showE('lsuc','Welcome back, '+u.firstName+'! Redirecting…','suc');
+    setTimeout(()=>goTo('home'),1200);
+  } else {
+    showE('lerr','Invalid credentials. Admin demo: admin@petale.com / admin123');
+  }
+}
+
+/* ═══════════════════ SIGNUP ═══════════════════ */
+function chkPw(v){
+  let s=0;if(v.length>=8)s++;if(/[A-Z]/.test(v))s++;if(/[0-9]/.test(v))s++;if(/[^a-zA-Z0-9]/.test(v))s++;
+  const lv=[['0%','transparent','Enter a password'],['25%','#e74c3c','Weak'],['50%','#e67e22','Fair'],['75%','#f1c40f','Good'],['100%','#27ae60','Strong']][s]||['0%','transparent',''];
+  document.getElementById('sfill').style.width=lv[0];document.getElementById('sfill').style.background=lv[1];
+  document.getElementById('slbl').textContent=lv[2];
+}
+function doSignup(){
+  const fn=(document.getElementById('sfn').value||'').trim(),ln=(document.getElementById('sln').value||'').trim(),
+        em=(document.getElementById('sem').value||'').trim(),ph=document.getElementById('sph').value||'',
+        ci=(document.getElementById('sci').value||'').trim(),co=document.getElementById('sco').value,
+        pw=document.getElementById('spw').value||'',pw2=document.getElementById('spw2').value||'',
+        terms=document.getElementById('sterms').checked;
+  if(!fn||!ln||!em||!pw){showE('serr','Please fill all required fields.');return;}
+  if(!em.includes('@')){showE('serr','Please enter a valid email.');return;}
+  if(pw.length<8){showE('serr','Password must be at least 8 characters.');return;}
+  if(pw!==pw2){showE('serr','Passwords do not match.');return;}
+  if(!terms){showE('serr','Please agree to the Terms of Service.');return;}
+  const users=JSON.parse(localStorage.getItem('petal_users')||'[]');
+  if(users.find(u=>u.email===em)){showE('serr','An account with this email already exists.');return;}
+  const user={id:'USR-'+Date.now(),firstName:fn,lastName:ln,email:em,phone:ph,city:ci,country:co,password:pw,joined:new Date().toLocaleDateString()};
+  users.push(user);localStorage.setItem('petal_users',JSON.stringify(users));
+  localStorage.setItem('petal_u',JSON.stringify({fn,email:em}));
+  showE('ssuc','Account created! Welcome, '+fn+'! Redirecting…','suc');
+  setTimeout(()=>goTo('home'),1500);
+}
+
+/* ═══════════════════ ORDERS STORAGE ═══════════════════ */
+function getOrds(){return JSON.parse(localStorage.getItem('petal_orders')||'[]');}
+function saveOrds(o){localStorage.setItem('petal_orders',JSON.stringify(o));}
+function siSt(s){return{Pending:'⏳',Delivered:'✅',Cancelled:'❌',Processing:'🔄'}[s]||'';}
+function scSt(s){return{Pending:'sp',Delivered:'sd',Cancelled:'sca',Processing:'spr'}[s]||'sp';}
+
+/* ═══════════════════ ADMIN INIT ═══════════════════ */
+function initAdm(){
+  if(!getOrds().length)saveOrds(SEEDS);
+  updAdmStats();renderRecent();renderOrdTable();renderProdAdm();renderCusts();
+  renderBarChart();renderDonut();updPBdg();
+}
+function updAdmStats(){
+  const ords=getOrds(),pend=ords.filter(o=>o.status==='Pending').length,
+        rev=ords.reduce((s,o)=>s+parseFloat((o.total||'$0').replace(/[^0-9.]/g,'')),0),
+        custs=JSON.parse(localStorage.getItem('petal_users')||'[]').length;
+  document.getElementById('sc-ord').textContent=ords.length;
+  document.getElementById('sc-rev').textContent='$'+rev.toFixed(0);
+  document.getElementById('sc-cus').textContent=custs;
+  document.getElementById('sc-pen').textContent=pend;
+  document.getElementById('sc-orch').textContent='+'+ords.length+' total';
+}
+function updPBdg(){
+  const p=getOrds().filter(o=>o.status==='Pending').length,b=document.getElementById('pbdg');
+  b.textContent=p;b.style.display=p>0?'':'none';
+}
+function renderRecent(){
+  const ords=getOrds().slice(-6).reverse();
+  document.getElementById('recBody').innerHTML=ords.map(o=>
+    `<tr><td><span class="oid">${o.id}</span></td><td>${o.name}</td><td>${o.email}</td><td><strong>${o.total}</strong></td><td><span class="sbdg ${scSt(o.status)}">${siSt(o.status)} ${o.status}</span></td><td>${o.date}</td></tr>`
+  ).join('')||'<tr><td colspan="6" style="text-align:center;padding:2rem;color:var(--mid)">No orders yet</td></tr>';
+}
+function renderOrdTable(){
+  const ords=getOrds();let filt2=admFilt==='all'?ords:ords.filter(o=>o.status===admFilt);
+  const sq=(document.getElementById('asrch').value||'').toLowerCase();
+  if(sq)filt2=filt2.filter(o=>o.id.toLowerCase().includes(sq)||o.name.toLowerCase().includes(sq)||o.email.toLowerCase().includes(sq));
+  const tot=filt2.length,start=(admPage-1)*PG,sl=filt2.slice(start,start+PG);
+  document.getElementById('pinfo').textContent=`Showing ${sl.length} of ${tot} orders`;
+  document.getElementById('ordBody').innerHTML=sl.map(o=>`<tr>
+    <td><span class="oid">${o.id}</span></td>
+    <td><strong>${o.name}</strong></td>
+    <td>${o.email}</td>
+    <td>${o.city||'—'}</td>
+    <td>${o.country||'—'}</td>
+    <td>${o.postal||'—'}</td>
+    <td style="max-width:140px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis" title="${o.items}">${o.items||'—'}</td>
+    <td><strong>${o.total}</strong></td>
+    <td><span class="sbdg ${scSt(o.status)}">${siSt(o.status)} ${o.status}</span></td>
+    <td>${o.date}</td>
+    <td><div class="actr">
+      <button class="ab" onclick="viewOrd('${o.id}')">View</button>
+      ${o.status!=='Delivered'&&o.status!=='Cancelled'?`<button class="ab g" onclick="updOrd('${o.id}','Delivered')">✅</button>`:''}
+      ${o.status!=='Cancelled'&&o.status!=='Delivered'?`<button class="ab r" onclick="updOrd('${o.id}','Cancelled')">✕</button>`:''}
+    </div></td>
+  </tr>`).join('')||'<tr><td colspan="11" style="text-align:center;padding:2.5rem;color:var(--mid)">No orders found</td></tr>';
+  const pages=Math.ceil(tot/PG)||1;
+  document.getElementById('pbtns').innerHTML=Array.from({length:Math.min(pages,7)},(_,i)=>
+    `<button class="pb ${i+1===admPage?'on':''}" onclick="goAP(${i+1})">${i+1}</button>`).join('');
+}
+function goAP(p){admPage=p;renderOrdTable();}
+function aFilt(s,btn){admFilt=s;admPage=1;document.querySelectorAll('.tfilts .tff').forEach(b=>b.classList.remove('on'));btn.classList.add('on');renderOrdTable();}
+function admSrch(){admPage=1;renderOrdTable();}
+function updOrd(id,status){
+  const ords=getOrds(),o=ords.find(x=>x.id===id);if(o)o.status=status;saveOrds(ords);
+  admT(`Order ${id} → ${status} ${siSt(status)}`);
+  updAdmStats();renderRecent();renderOrdTable();renderDonut();updPBdg();
+}
+function viewOrd(id){
+  const o=getOrds().find(x=>x.id===id);if(!o)return;
+  selOid=id;
+  document.getElementById('amodSub').textContent='Order '+o.id;
+  document.getElementById('amodCont').innerHTML=`
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:.8rem;margin-bottom:1rem">
+      <div><div style="font-size:.68rem;color:var(--mid);text-transform:uppercase;letter-spacing:.07em;margin-bottom:.2rem">Customer</div><div style="font-weight:500">${o.name}</div></div>
+      <div><div style="font-size:.68rem;color:var(--mid);text-transform:uppercase;letter-spacing:.07em;margin-bottom:.2rem">Email</div><div>${o.email}</div></div>
+      <div><div style="font-size:.68rem;color:var(--mid);text-transform:uppercase;letter-spacing:.07em;margin-bottom:.2rem">City</div><div>${o.city||'—'}</div></div>
+      <div><div style="font-size:.68rem;color:var(--mid);text-transform:uppercase;letter-spacing:.07em;margin-bottom:.2rem">Country</div><div>${o.country||'—'}</div></div>
+      <div><div style="font-size:.68rem;color:var(--mid);text-transform:uppercase;letter-spacing:.07em;margin-bottom:.2rem">Postal Code</div><div>${o.postal||'—'}</div></div>
+      <div><div style="font-size:.68rem;color:var(--mid);text-transform:uppercase;letter-spacing:.07em;margin-bottom:.2rem">Date</div><div>${o.date}</div></div>
+    </div>
+    <div style="background:var(--petal);border-radius:12px;padding:1rem;margin-bottom:1rem">
+      <div style="font-size:.68rem;color:var(--mid);text-transform:uppercase;letter-spacing:.07em;margin-bottom:.3rem">Items Ordered</div>
+      <div style="font-size:.87rem">${o.items||'—'}</div>
+    </div>
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:.8rem">
+      <span>Total: <strong>${o.total}</strong></span>
+      <span class="sbdg ${scSt(o.status)}">${siSt(o.status)} ${o.status}</span>
+    </div>
+    <div style="font-size:.73rem;color:var(--mid);margin-bottom:.4rem">Update Status:</div>
+    <div class="actr">
+      <button class="ab" onclick="updOrd('${o.id}','Pending');closeAMod()">⏳ Pending</button>
+      <button class="ab" onclick="updOrd('${o.id}','Processing');closeAMod()">🔄 Processing</button>
+      <button class="ab g" onclick="updOrd('${o.id}','Delivered');closeAMod()">✅ Delivered</button>
+      <button class="ab r" onclick="updOrd('${o.id}','Cancelled');closeAMod()">✕ Cancel</button>
+    </div>`;
+  document.getElementById('ordmod').classList.add('on');
+}
+function modalDeliver(){if(selOid){updOrd(selOid,'Delivered');closeAMod();}}
+function closeAMod(){document.getElementById('ordmod').classList.remove('on');}
+
+function renderProdAdm(){
+  document.getElementById('prodAdmBody').innerHTML=admProds.map(p=>`<tr>
+    <td><div style="display:flex;align-items:center;gap:.7rem"><div class="pthu">${p.imgs[0]}</div><div style="font-weight:500;font-size:.85rem">${p.name}</div></div></td>
+    <td style="text-transform:capitalize">${p.cat}</td>
+    <td>$${p.price}</td>
+    <td><span class="spill ${p.inStock?'sin':'sout'}">${p.inStock?'✅ In Stock':'❌ Out of Stock'}</span></td>
+    <td>${p.badge?`<span class="sbdg" style="background:rgba(192,21,42,.08);color:var(--rose)">${p.badge}</span>`:'—'}</td>
+    <td><button class="ab" onclick="togStock(${p.id})">${p.inStock?'Mark Out':'Mark In'}</button></td>
+  </tr>`).join('');
+}
+function togStock(id){
+  const p=admProds.find(x=>x.id===id);if(!p)return;
+  p.inStock=!p.inStock;renderProdAdm();
+  admT(`"${p.name}" → ${p.inStock?'In Stock ✅':'Out of Stock ❌'}`);
+}
+
+function renderCusts(){
+  const users=JSON.parse(localStorage.getItem('petal_users')||'[]'),ords=getOrds();
+  document.getElementById('custBody').innerHTML=users.length?users.map(u=>`<tr>
+    <td><div style="display:flex;align-items:center;gap:.6rem"><div style="width:32px;height:32px;border-radius:50%;background:var(--petal);display:flex;align-items:center;justify-content:center;font-size:1rem">👤</div><div><div style="font-weight:500">${u.firstName} ${u.lastName}</div><div style="font-size:.7rem;color:var(--mid)">${u.id}</div></div></div></td>
+    <td>${u.email}</td><td>${u.city||'—'}</td><td>${u.country||'—'}</td>
+    <td>${u.phone||'—'}</td><td>${u.joined||'—'}</td>
+    <td><span class="sbdg sd">${ords.filter(o=>o.email===u.email).length} orders</span></td>
+  </tr>`).join('')
+  :`<tr><td colspan="7" style="text-align:center;padding:2.5rem;color:var(--mid)">No registered customers yet. <span style="color:var(--rose);cursor:pointer" onclick="goTo('signup')">Create one →</span></td></tr>`;
+}
+
+function renderBarChart(){
+  const v=[12,18,25,22,30,28],max=Math.max(...v);
+  document.getElementById('bchart').innerHTML=v.map(x=>`<div class="bgp"><div class="bar" title="${x} orders" style="height:${(x/max)*100}%"></div><span class="blbl">${x}</span></div>`).join('');
+}
+function renderDonut(){
+  const ords=getOrds(),tot=ords.length||1,sts=['Pending','Delivered','Processing','Cancelled'],cols=['#B8902A','#5C7A5A','#3D72B4','#C0152A'];
+  document.getElementById('dlist').innerHTML=sts.map((s,i)=>{
+    const c=ords.filter(o=>o.status===s).length;
+    return `<div class="di"><div class="ddot" style="background:${cols[i]}"></div><span class="dlbl">${s}</span><span class="dval">${c} (${Math.round(c/tot*100)}%)</span></div>`;
+  }).join('');
+}
+
+/* showAP is defined below in enhanced section */
+function _oldShowAP_removed(){}
+function openASb(){document.getElementById('asb').classList.add('mo');document.getElementById('asbov').classList.add('on');}
+function closeASb(){document.getElementById('asb').classList.remove('mo');document.getElementById('asbov').classList.remove('on');}
+
+/* ═══════════════════ ANALYTICS ═══════════════════ */
+function renderAnalytics(){
+  const ords=getOrds();
+  const rev=ords.reduce((s,o)=>s+parseFloat((o.total||'$0').replace(/[^0-9.]/g,'')),0);
+  const aov=ords.length?rev/ords.length:0;
+  document.getElementById('ana-rev').textContent='$'+rev.toFixed(0);
+  document.getElementById('ana-aov').textContent='$'+aov.toFixed(0);
+  // mini bar charts
+  function renderMB(id,vals){
+    const max=Math.max(...vals)||1;
+    document.getElementById(id).innerHTML=vals.map(v=>`<div class="mb" title="${v}" style="height:${(v/max)*100}%"></div>`).join('');
+  }
+  renderMB('mb-rev',[820,950,1100,980,1250,1380,1180,1320,1410,1280,1500,rev>0?rev:1420]);
+  renderMB('mb-aov',[48,52,55,51,58,60,56,59,62,57,63,aov>0?aov:65]);
+  renderMB('mb-conv',[3.2,3.8,4.1,3.7,4.0,3.9,3.8,4.2,3.9,4.1,3.8,3.8]);
+  renderMB('mb-rep',[35,38,40,37,41,43,39,42,44,41,42,42]);
+  renderMB('mb-ab',[8,10,9,12,11,10,13,11,12,10,12,12]);
+  // top products
+  const topPs=[
+    {ico:'🌹',nm:'Classic Red Roses',val:'$1,260',pct:90},
+    {ico:'🌸',nm:'Luxury Peony Bouquet',val:'$975',pct:75},
+    {ico:'💐',nm:'Spring Garden Mix',val:'$870',pct:68},
+    {ico:'🌺',nm:'Exotic Tropical Blend',val:'$760',pct:60},
+    {ico:'💜',nm:'White Orchid Elegance',val:'$680',pct:52},
+  ];
+  document.getElementById('topProdsList').innerHTML=topPs.map((p,i)=>`
+    <div class="tp-item">
+      <div class="tp-rank">${i+1}</div>
+      <div class="tp-ico">${p.ico}</div>
+      <div class="tp-nm">${p.nm}</div>
+      <div class="tp-bar-wrap"><div class="tp-bar" style="width:${p.pct}%"></div></div>
+      <div class="tp-val">${p.val}</div>
+    </div>`).join('');
+  // country breakdown
+  const countries=[
+    {flag:'🇬🇧',name:'United Kingdom',orders:38,pct:38},
+    {flag:'🇺🇸',name:'United States',orders:24,pct:24},
+    {flag:'🇵🇰',name:'Pakistan',orders:18,pct:18},
+    {flag:'🇦🇪',name:'UAE',orders:12,pct:12},
+    {flag:'🌍',name:'Other',orders:8,pct:8},
+  ];
+  document.getElementById('countryList').innerHTML=countries.map(c=>`
+    <div class="tp-item">
+      <div class="tp-ico">${c.flag}</div>
+      <div class="tp-nm">${c.name}</div>
+      <div class="tp-bar-wrap"><div class="tp-bar" style="width:${c.pct}%"></div></div>
+      <div class="tp-val">${c.orders} orders</div>
+    </div>`).join('');
+  // activity feed
+  const acts=[
+    {ico:'📦',cls:'ord',main:'New order placed',sub:'Emily Clarke ordered Classic Red Roses',time:'2 min ago'},
+    {ico:'👤',cls:'usr',main:'New customer registered',sub:'Amara Khan created an account',time:'14 min ago'},
+    {ico:'✅',cls:'ord',main:'Order delivered',sub:'ORD-1003 marked as Delivered',time:'32 min ago'},
+    {ico:'⚠️',cls:'stk',main:'Stock alert',sub:'Golden Yellow Roses is Out of Stock',time:'1 hr ago'},
+    {ico:'📦',cls:'ord',main:'New order placed',sub:'Layla Hassan ordered Purple Orchid Bundle',time:'1 hr ago'},
+    {ico:'💰',cls:'ord',main:'Payment received',sub:'$108.00 from Layla Hassan',time:'1 hr ago'},
+    {ico:'👤',cls:'usr',main:'New customer registered',sub:'Viktor Novak created an account',time:'2 hr ago'},
+    {ico:'⚠️',cls:'stk',main:'Stock alert',sub:'Rainbow Rose Bundle is Out of Stock',time:'3 hr ago'},
+  ];
+  document.getElementById('actFeed').innerHTML=acts.map(a=>`
+    <div class="af-item">
+      <div class="af-ico ${a.cls}">${a.ico}</div>
+      <div class="af-txt"><div class="af-main">${a.main}</div><div class="af-sub">${a.sub}</div></div>
+      <div class="af-time">${a.time}</div>
+    </div>`).join('');
+}
+
+/* ═══════════════════ COUPONS ═══════════════════ */
+let coupons=[
+  {code:'PETAL15',disc:'15% off',min:'$0',maxUses:500,used:128,exp:'31/12/2026',active:true,desc:'Welcome discount for new customers'},
+  {code:'BLOOM25',disc:'25% off',min:'$50',maxUses:200,used:87,exp:'30/06/2026',active:true,desc:'Spring seasonal offer'},
+  {code:'ROSE10',disc:'$10 off',min:'$40',maxUses:300,used:201,exp:'31/03/2026',active:false,desc:'Valentine\'s Day special'},
+  {code:'FREESHIP',disc:'Free Delivery',min:'$30',maxUses:1000,used:342,exp:'31/12/2026',active:true,desc:'Free shipping on qualifying orders'},
+  {code:'VIP20',disc:'20% off',min:'$60',maxUses:50,used:18,exp:'30/09/2026',active:true,desc:'VIP customer exclusive'},
+  {code:'SUMMER30',disc:'30% off',min:'$80',maxUses:100,used:5,exp:'31/08/2026',active:true,desc:'Summer sale promo'},
+];
+function renderCoupons(){
+  document.getElementById('cpnGrid').innerHTML=coupons.map((c,i)=>`
+    <div class="cpn-card">
+      <div class="cpn-stripe"></div>
+      <div class="cpn-body">
+        <div class="cpn-code">${c.code}</div>
+        <div class="cpn-disc">${c.disc} — ${c.desc}</div>
+        <div class="cpn-meta">
+          <span class="cpn-tag">Min $${c.min.replace('$','') || '0'}</span>
+          <span class="cpn-tag">${c.used}/${c.maxUses} used</span>
+          <span class="cpn-tag">Expires ${c.exp}</span>
+        </div>
+      </div>
+      <div class="cpn-foot">
+        <span class="cpn-uses">${Math.round(c.used/c.maxUses*100)}% redeemed</span>
+        <button class="cpn-toggle ${c.active?'act':''}" onclick="togCoupon(${i})">${c.active?'Active':'Inactive'}</button>
+      </div>
+    </div>`).join('');
+}
+function togCoupon(i){
+  coupons[i].active=!coupons[i].active;
+  renderCoupons();
+  admT(`Coupon ${coupons[i].code} → ${coupons[i].active?'Activated ✅':'Deactivated ❌'}`);
+}
+function addCoupon(){
+  const code=(document.getElementById('cpnCode').value||'').trim().toUpperCase();
+  const disc=(document.getElementById('cpnDisc').value||'').trim();
+  const exp=document.getElementById('cpnExp').value;
+  const min=document.getElementById('cpnMin').value||'0';
+  const max=parseInt(document.getElementById('cpnMax').value)||100;
+  if(!code||!disc){admT('Please enter code and discount!');return;}
+  coupons.unshift({code,disc,min:'$'+min,maxUses:max,used:0,exp:exp||'31/12/2026',active:true,desc:'Custom coupon'});
+  renderCoupons();
+  document.getElementById('cpnCode').value='';document.getElementById('cpnDisc').value='';
+  document.getElementById('cpnExp').value='';document.getElementById('cpnMin').value='';
+  document.getElementById('cpnMax').value='';
+  admT(`Coupon "${code}" created! 🎟️`);
+}
+
+/* ═══════════════════ NOTIFICATIONS ═══════════════════ */
+let notifs=[
+  {ico:'📦',cls:'nf-ord',title:'New Order Received',body:'Emily Clarke placed order ORD-1001 for $80.00',time:'2 minutes ago',read:false},
+  {ico:'💳',cls:'nf-ord',title:'Payment Confirmed',body:'Payment of $108.00 received from Layla Hassan',time:'14 minutes ago',read:false},
+  {ico:'⚠️',cls:'nf-ord',title:'Stock Alert',body:'Golden Yellow Roses is now out of stock',time:'1 hour ago',read:false},
+  {ico:'👤',cls:'nf-ord',title:'New Customer',body:'Amara Khan created an account and placed their first order',time:'2 hours ago',read:true},
+  {ico:'✅',cls:'nf-ord',title:'Order Delivered',body:'Order ORD-1003 has been marked as Delivered',time:'3 hours ago',read:true},
+  {ico:'🎟️',cls:'nf-ord',title:'Coupon Used',body:'BLOOM25 coupon was used 5 times today',time:'4 hours ago',read:true},
+  {ico:'🌸',cls:'nf-ord',title:'Review Received',body:'Sarah M. left a 5-star review on Classic Red Roses',time:'6 hours ago',read:true},
+  {ico:'📦',cls:'nf-ord',title:'Order Cancelled',body:'Order ORD-1005 was cancelled by the customer',time:'8 hours ago',read:true},
+];
+function renderNotifs(){
+  document.getElementById('notifList').innerHTML=notifs.map((n,i)=>`
+    <div class="nf-item ${n.read?'':'unread'}" onclick="readNotif(${i})">
+      <div class="nf-ico ${n.cls}">${n.ico}</div>
+      <div class="nf-msg">
+        <div class="nf-title">${n.title}</div>
+        <div class="nf-body">${n.body}</div>
+        <div class="nf-time">🕐 ${n.time}</div>
+      </div>
+      <div class="nf-dot ${n.read?'read':''}"></div>
+    </div>`).join('');
+}
+function readNotif(i){notifs[i].read=true;renderNotifs();}
+function markAllRead(){notifs.forEach(n=>n.read=true);renderNotifs();admT('All notifications marked as read ✅');}
+
+/* ═══════════════════ ENHANCED showAP ═══════════════════ */
+function showAP(name,el){
+  document.querySelectorAll('.apg').forEach(p=>{p.classList.remove('on');p.style.display='none';});
+  document.querySelectorAll('.asit').forEach(s=>s.classList.remove('on'));
+  const pg=document.getElementById('ap-'+name);
+  if(pg){pg.classList.add('on');pg.style.display='block';}
+  if(el)el.classList.add('on');
+  const titles={dashboard:'Dashboard',orders:'Customer Orders',products:'Products',customers:'Customers',settings:'Settings',analytics:'Analytics & Reports',coupons:'Coupon Management',notifications:'Notifications'};
+  document.getElementById('atpt').textContent=titles[name]||name;
+  if(name==='orders'){renderOrdTable();updAdmStats();}
+  if(name==='customers')renderCusts();
+  if(name==='dashboard'){updAdmStats();renderRecent();renderDonut();}
+  if(name==='analytics')renderAnalytics();
+  if(name==='coupons')renderCoupons();
+  if(name==='notifications')renderNotifs();
+  closeASb();
+}
+
+/* ═══════════════════ INIT ═══════════════════ */
+renderP(PRODS);
+</script>
+</body>
+</html>
